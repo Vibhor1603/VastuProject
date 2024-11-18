@@ -48,13 +48,18 @@ function Profile() {
     }
     getProjects();
   }, []);
+
+  function handlenewProject() {
+    navigate("/project");
+  }
   return (
     <>
       <div className="bg-orange-350 text-white h-full pb-72">
-        <button className="bg-gradient-to-r from-orange-600 to-amber-600 text-white px-6 py-2.5 rounded-full font-semibold hover:from-orange-700 hover:to-amber-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 ">
-          <Link to="/createproject" className="text-white">
-            Create a new Project
-          </Link>
+        <button
+          onClick={handlenewProject}
+          className="bg-gradient-to-r from-orange-600 to-amber-600 text-white px-6 py-2.5 rounded-full font-semibold hover:from-orange-700 hover:to-amber-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 "
+        >
+          Create a new Project
         </button>
         {projects.length !== 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
