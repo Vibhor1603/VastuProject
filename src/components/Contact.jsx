@@ -1,19 +1,31 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Mail, Phone, MessageSquare, SendHorizontal, Heart } from 'lucide-react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import {
+  Mail,
+  Phone,
+  MessageSquare,
+  SendHorizontal,
+  Heart,
+} from "lucide-react";
 
 const ContactPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    mobile: '',
-    feedback: ''
+    email: "",
+    mobile: "",
+    feedback: "",
   });
 
   const handleChange = (e) => {
@@ -31,16 +43,16 @@ const ContactPage = () => {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        console.log("feedback submitted");
-        navigate('/');
-      } else {
-        console.log("feedback error");
-      }
+      // if (response.ok) {
+      //   console.log("feedback submitted");
+      //   navigate("/");
+      // } else {
+      //   console.log("feedback error");
+      // }
     } catch (error) {
       console.log(error);
     }
-    setFormData({ email: '', mobile: '', feedback: '' });
+    setFormData({ email: "", mobile: "", feedback: "" });
   };
 
   return (
@@ -61,7 +73,10 @@ const ContactPage = () => {
         <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2 text-orange-700">
+              <Label
+                htmlFor="email"
+                className="text-sm font-medium flex items-center gap-2 text-orange-700"
+              >
                 <Mail className="w-4 h-4 text-orange-500" />
                 Email Address
               </Label>
@@ -80,7 +95,10 @@ const ContactPage = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="mobile" className="text-sm font-medium flex items-center gap-2 text-orange-700">
+              <Label
+                htmlFor="mobile"
+                className="text-sm font-medium flex items-center gap-2 text-orange-700"
+              >
                 <Phone className="w-4 h-4 text-orange-500" />
                 Mobile Number
               </Label>
@@ -99,7 +117,10 @@ const ContactPage = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="feedback" className="text-sm font-medium flex items-center gap-2 text-orange-700">
+              <Label
+                htmlFor="feedback"
+                className="text-sm font-medium flex items-center gap-2 text-orange-700"
+              >
                 <MessageSquare className="w-4 h-4 text-orange-500" />
                 Your Feedback
               </Label>

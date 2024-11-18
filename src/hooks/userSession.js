@@ -15,7 +15,7 @@ const checkAuthStatus = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
+
           localStorage.setItem("username", data.username);
           setIsAuthenticated(data.isAuthenticated); // Set based on server response
           setLoading(false);

@@ -43,7 +43,7 @@ function Profile() {
         }
       );
       const data = await response.json();
-      console.log(data);
+
       setProjects(data);
     }
     getProjects();
