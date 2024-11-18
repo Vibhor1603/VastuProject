@@ -1,38 +1,42 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { Quote, Star } from 'lucide-react';
+import React from "react";
+import { Quote, Star } from "lucide-react";
 
 const Testimonials = () => {
   const testimonials = [
     {
       name: "Priya Sharma",
       role: "Homeowner",
-      image: "/api/placeholder/100/100",
+      image:
+        "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg",
       text: "The Vastu consultation completely transformed our home's energy. We've noticed significant positive changes in our daily lives.",
-      rating: 5
+      rating: 5,
     },
     {
-        name: "Vibhor Sharma",
-        role: "Homeowner",
-        image: "/api/placeholder/100/100",
-        text: "The Vastu consultation completely transformed our home's energy. We've noticed significant positive changes in our daily lives.",
-        rating: 5
-      },
-    
+      name: "Vibhor Sharma",
+      role: "Homeowner",
+      image:
+        "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg",
+      text: "The Vastu consultation completely transformed our home's energy. We've noticed significant positive changes in our daily lives.",
+      rating: 5,
+    },
+
     {
       name: "Rajesh Patel",
       role: "Business Owner",
-      image: "/api/placeholder/100/100",
+      image:
+        "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg",
       text: "After implementing the Vastu recommendations in my office, we've seen improved team productivity and business growth.",
-      rating: 5
+      rating: 5,
     },
     {
       name: "Anita Desai",
       role: "Interior Designer",
-      image: "/api/placeholder/100/100",
+      image:
+        "https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg",
       text: "As an interior designer, I highly recommend their Vastu consultation services. The reports are detailed and practical.",
-      rating: 5
-    }
+      rating: 5,
+    },
   ];
 
   return (
@@ -43,7 +47,8 @@ const Testimonials = () => {
             Client Testimonials
           </h2>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto px-4">
-            Hear what our clients have to say about their Vastu consultation experience
+            Hear what our clients have to say about their Vastu consultation
+            experience
           </p>
         </div>
 
@@ -69,7 +74,10 @@ const Testimonials = () => {
                     </p>
                     <div className="flex mb-3 sm:mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 fill-current" />
+                        <Star
+                          key={i}
+                          className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 fill-current"
+                        />
                       ))}
                     </div>
                     <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">
