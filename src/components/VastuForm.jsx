@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Oval } from "react-loader-spinner";
 import {
   Select,
   SelectContent,
@@ -23,27 +24,34 @@ const VastuForm = () => {
     address: "",
     consultantid: "",
   });
+  const [isLoading, setIsloading] = React.useState(false);
   const navigate = useNavigate();
   async function submitForm() {
-    const response = await fetch(
-      "https://vastubackend.onrender.com/api/v1/project/newproject",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
+    setIsloading(true);
+    try {
+      const response = await fetch(
+        "https://vastubackend.onrender.com/api/v1/project/newproject",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
+      if (response.ok) {
+        setIsloading(false);
+        const data = await response.json();
+        localStorage.setItem("projectId", data.id);
+        const match = data.message.match(/Project (.+) created successfully/);
+        const projectName = match ? match[1] : "";
+        localStorage.setItem("projectName", projectName);
+        navigate("/floorForm");
       }
-    );
-    const data = await response.json();
-    localStorage.setItem("projectId", data.id);
-
-    console.log(data.message);
-    const match = data.message.match(/Project (.+) created successfully/);
-    const projectName = match ? match[1] : "";
-    localStorage.setItem("projectName", projectName);
-    navigate("/floorForm");
+    } catch (error) {
+      console.log({ err: error });
+    }
   }
 
   return (
@@ -218,12 +226,27 @@ const VastuForm = () => {
           </div>
 
           {/* Submit Button */}
-          <Button
-            className="w-full bg-gradient-to-r from-orange-500 to-violet-600 hover:from-orange-600 hover:to-violet-700 text-white py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 "
-            onClick={submitForm}
-          >
-            Submit Consultation Request
-          </Button>
+          {isLoading ? (
+            <Oval
+              height={40}
+              width={40}
+              color="white"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#CC5500"
+              strokeWidth={8}
+              strokeWidthSecondary={2}
+            />
+          ) : (
+            <Button
+              className="w-full bg-gradient-to-r from-orange-500 to-violet-600 hover:from-orange-600 hover:to-violet-700 text-white py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 "
+              onClick={submitForm}
+            >
+              Submit Consultation Request
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>

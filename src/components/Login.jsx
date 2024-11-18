@@ -7,11 +7,13 @@ import { Eye } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import { Item } from "@radix-ui/react-radio-group";
 import checkAuthStatus from "@/hooks/userSession";
+import { Oval } from "react-loader-spinner";
 
 const Login = ({ onClose, success }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsloading] = React.useState(false);
   const navigate = useNavigate();
 
   function passwordhandler() {
@@ -19,6 +21,7 @@ const Login = ({ onClose, success }) => {
   }
   //
   const handleSubmit = async () => {
+    setIsloading(true);
     try {
       const response = await fetch(
         "https://vastubackend.onrender.com/api/v1/user/signin",
@@ -40,6 +43,7 @@ const Login = ({ onClose, success }) => {
         success();
         navigate("/profile");
         toast.info("You are logged in successfully");
+        setIsloading(false);
       } else {
         // Handle login error
         const data = await response.json();
@@ -53,7 +57,6 @@ const Login = ({ onClose, success }) => {
   return (
     <div className="fixed inset-0 bg-slate-800 bg-opacity-50 z-50 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
         <form>
           <div className="mb-4">
             <label
@@ -95,13 +98,35 @@ const Login = ({ onClose, success }) => {
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <button
+            {/* <button
               onClick={handleSubmit}
               className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
             >
               Sign In
-            </button>
+            </button> */}
+            {isLoading ? (
+              <Oval
+                height={20}
+                width={20}
+                color="#4fa94d"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+                ariaLabel="oval-loading"
+                secondaryColor="#4fa94d"
+                strokeWidth={8}
+                strokeWidthSecondary={2}
+              />
+            ) : (
+              <button
+                onClick={handleSubmit}
+                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+              >
+                Sign In
+              </button>
+            )}
             <button
               onClick={onClose}
               className="bg-slate-200 hover:bg-slate-300 text-orange-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

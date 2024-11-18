@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { X, Building, MapPin, Layers, Home, Calendar } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -11,16 +11,21 @@ function MoreDetails({ selectedProject, onClose }) {
   };
 
   const navigate = useNavigate();
-  const isAuthenticated = checkAuthStatus();
-  if (!isAuthenticated) {
-    navigate("/");
-  }
+  const { isAuthenticated, isLoading } = checkAuthStatus();
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   async function dispFloorPlan() {
-    localStorage.setItem("floorID", selectedProject.id);
-    navigate("/floorplan");
+    localStorage.setItem("selectedProjectID", selectedProject.id);
+    navigate("/floorplans");
   }
-
+  function createFloorPlan() {
+    localStorage.setItem("projectId", selectedProject.id);
+    navigate("/floorForm");
+  }
   return (
     <div
       className="fixed inset-0 bg-black/25 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -121,6 +126,15 @@ function MoreDetails({ selectedProject, onClose }) {
             type="button"
           >
             View uploaded floor plans
+          </button>
+        </div>
+        <div className="flex justify-end mt-6 pt-4 border-t border-orange-200">
+          <button
+            onClick={createFloorPlan}
+            className="px-4 py-2 rounded-lg bg-orange-300 hover:bg-orange-200 text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1"
+            type="button"
+          >
+            Upload new Floor Plan
           </button>
         </div>
       </div>
