@@ -3,17 +3,17 @@ import React, { useEffect } from "react";
 import ProjectCard from "../components/ProjectCard";
 import MoreDetails from "@/components/MoreDetails";
 import checkAuthStatus from "@/hooks/userSession";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Profile() {
   const navigate = useNavigate();
   const [projects, setProjects] = React.useState([]);
-  const isAuthenticated = checkAuthStatus();
+  const { isLoading, isAuthenticated } = checkAuthStatus();
 
-  if (!isAuthenticated) {
-    navigate("/home");
-    console.log(isAuthenticated);
-  }
+  // if (!isAuthenticated) {
+  //   navigate("/");
+  //   console.log(isAuthenticated);
+  // }
 
   const [selectedProject, setSelectedProject] = React.useState(null);
 
@@ -24,11 +24,16 @@ function Profile() {
   function closeHandler() {
     setSelectedProject(null);
   }
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   useEffect(() => {
     async function getProjects() {
       const response = await fetch(
-        "http://localhost:3000/api/v1/project/createdprojects",
+        "https://vastubackend.onrender.com/api/v1/project/createdprojects",
         {
           method: "GET",
           headers: {

@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 
 const checkAuthStatus = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     async function userAuth() {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/v1/user/session",
+          "https://vastubackend.onrender.com/api/v1/user/session",
           {
             method: "GET",
             credentials: "include",
@@ -17,17 +18,20 @@ const checkAuthStatus = () => {
           console.log(data);
           localStorage.setItem("username", data.username);
           setIsAuthenticated(data.isAuthenticated); // Set based on server response
+          setLoading(false);
         } else {
           setIsAuthenticated(false);
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error checking session:", error);
         setIsAuthenticated(false);
+        setLoading(false);
       }
     }
     userAuth();
   }, []);
-  return isAuthenticated;
+  return { isAuthenticated, isLoading };
 };
 
 export default checkAuthStatus;

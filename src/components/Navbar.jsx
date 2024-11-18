@@ -13,22 +13,25 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/v1/user/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://vastubackend.onrender.com/api/v1/user/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         setIsLoggedIn(false);
         localStorage.setItem("username", "");
         localStorage.setItem("projectId", "");
         localStorage.setItem("projectName", "");
-
+        localStorage.setItem("floorID", "");
         const data = await response.json();
-        console.log(data);
+
         navigate("/");
       } else {
         // Handle signup error
@@ -43,7 +46,7 @@ export default function Navbar() {
     async function userAuth() {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/v1/user/session",
+          "https://vastubackend.onrender.com/api/v1/user/session",
           {
             method: "GET",
             credentials: "include",
@@ -53,7 +56,8 @@ export default function Navbar() {
           const data = await response.json();
           // console.log(data);
           localStorage.setItem("username", data.username);
-          setIsLoggedIn(data.isAuthenticated); // Set based on server response
+          setIsLoggedIn(data.isAuthenticated);
+          // Set based on server response
         } else {
           setIsLoggedIn(false);
         }
@@ -231,13 +235,15 @@ export default function Navbar() {
             ) : (
               <div className="px-4 space-y-2">
                 <button
-                  onClick={handleLogin}
+                  onClick={() => setOpenLogin(true)}
                   className="w-full bg-white text-gray-700 border border-amber-200 px-6 py-2.5 rounded-full font-semibold hover:bg-orange-50 hover:border-amber-300 transition-all duration-300 shadow-sm"
                 >
                   Login
                 </button>
                 <button
-                  onClick={handleSignup}
+                  onClick={() => {
+                    setOpenSignUp(true);
+                  }}
                   className="w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white px-6 py-2.5 rounded-full font-semibold hover:from-orange-700 hover:to-amber-700 transition-all duration-300 shadow-md"
                 >
                   Sign Up

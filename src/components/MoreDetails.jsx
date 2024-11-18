@@ -9,24 +9,16 @@ function MoreDetails({ selectedProject, onClose }) {
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
+
+  const navigate = useNavigate();
+  const isAuthenticated = checkAuthStatus();
   if (!isAuthenticated) {
     navigate("/");
   }
 
-  const navigate = useNavigate();
-  const isAuthenticated = checkAuthStatus();
-
   async function dispFloorPlan() {
     localStorage.setItem("floorID", selectedProject.id);
-    const floorID = localStorage.getItem("floorID");
-    const response = await axios.get(
-      `http://localhost:3000/api/v1/floorplan/floorplans/${floorID}`,
-      {
-        withCredentials: true,
-      }
-    );
-    const data = await response.data;
-    console.log(data);
+    navigate("/floorplan");
   }
 
   return (

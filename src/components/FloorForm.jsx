@@ -57,7 +57,7 @@ function FloorForm() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const response = await axios.post(
-      `http://localhost:3000/api/v1/floorplan/new-floorplan/${id}`,
+      `https://vastubackend.onrender.com/api/v1/floorplan/new-floorplan/${id}`,
 
       {
         floorNumber: Number(floorNum),
@@ -68,7 +68,8 @@ function FloorForm() {
         withCredentials: true,
       }
     );
-    console.log(response.data);
+
+    navigate("/profile");
   };
 
   return (

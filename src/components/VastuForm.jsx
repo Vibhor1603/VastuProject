@@ -26,7 +26,7 @@ const VastuForm = () => {
   const navigate = useNavigate();
   async function submitForm() {
     const response = await fetch(
-      "http://localhost:3000/api/v1/project/newproject",
+      "https://vastubackend.onrender.com/api/v1/project/newproject",
       {
         method: "POST",
         headers: {

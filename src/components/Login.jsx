@@ -20,19 +20,22 @@ const Login = ({ onClose, success }) => {
   //
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/v1/user/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://vastubackend.onrender.com/api/v1/user/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       if (response.ok) {
         // Store the auth token in localStorage
         const data = await response.json();
-        console.log(data);
+
         onClose();
         success();
         navigate("/profile");

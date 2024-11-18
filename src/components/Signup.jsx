@@ -1,38 +1,41 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = ({ onClose }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/v1/user/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials:"include",
-        body: JSON.stringify({ name, email, password }),
-      });
+      const response = await fetch(
+        "https://vastubackend.onrender.com/api/v1/user/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
 
       if (response.ok) {
         // Store the auth token in localStorage
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         // localStorage.setItem('authToken', data.token);
         onClose();
-        navigate('/');
+        navigate("/");
       } else {
         // Handle signup error
-        console.error('Signup failed');
+        console.error("Signup failed");
       }
     } catch (error) {
-      console.error('Error signing up:', error);
+      console.error("Error signing up:", error);
     }
   };
 
@@ -42,7 +45,10 @@ const Signup = ({ onClose }) => {
         <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
         <form>
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="name"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Name
             </label>
             <input
@@ -55,7 +61,10 @@ const Signup = ({ onClose }) => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Email
             </label>
             <input
@@ -68,7 +77,10 @@ const Signup = ({ onClose }) => {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Password
             </label>
             <input
