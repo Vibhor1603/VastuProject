@@ -58,7 +58,7 @@ const About = () => {
         {/* Online Consultation */}
         <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
           <img
-            src="/image-3.jpg"
+            src="/image-2.jpg"
             alt="Online Consultation"
             className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
           />
