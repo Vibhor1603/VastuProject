@@ -11,6 +11,7 @@ import ContactPage from "../components/Contact";
 import Profile from "./Profile";
 import FloorForm from "@/components/FloorForm";
 import FloorPlans from "@/components/FloorPlans";
+import ImageUploader from "@/components/ImageUploader";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route index element={<Root />} />
         <Route path="/home" element={<Root />} />
+        <Route path="/editedimg" element={<ImageUploader />} />
         <Route path="/project" element={<VastuForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/contact" element={<ContactPage />} />

@@ -24,6 +24,7 @@ function MoreDetails({ selectedProject, onClose }) {
   }
   function createFloorPlan() {
     localStorage.setItem("projectId", selectedProject.id);
+    localStorage.setItem("projectName", selectedProject.name);
     navigate("/floorForm");
   }
   return (

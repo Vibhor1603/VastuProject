@@ -19,11 +19,7 @@ function FloorForm() {
   const [floorNum, setFloorNum] = React.useState("");
   const isAuthenticated = checkAuthStatus();
   const navigate = useNavigate();
-
-  const floorPlans = {
-    floorNum: 2,
-    floorplan: "",
-  };
+  const [image, setImage] = React.useState(null);
 
   if (!isAuthenticated) {
     navigate("/");
@@ -35,42 +31,51 @@ function FloorForm() {
   const projectName = localStorage.getItem("projectName");
   const username = localStorage.getItem("username");
 
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    formData.append("userName", username);
-    formData.append("projectName", projectName);
-    formData.append("image", file);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/floorplan/image-upload",
-        formData
-      );
-      const data = await response.data;
-      console.log(data.imageURL.url);
-      setImageUrl(data.imageURL.url);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const id = localStorage.getItem("projectId");
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post(
-      `https://vastubackend.onrender.com/api/v1/floorplan/new-floorplan/${id}`,
-
-      {
-        floorNumber: Number(floorNum),
-        description: description,
-        floorPlan: imageUrl,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-
-    navigate("/profile");
+    localStorage.setItem("floornum", floorNum);
+    localStorage.setItem("description", description);
+    navigate("/editedimg");
   };
+  const id = localStorage.getItem("projectId");
+  useEffect(() => {
+    if (image) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        localStorage.setItem("userImage", reader.result); // Store base64 image in localStorage
+      };
+      reader.readAsDataURL(image);
+    }
+  }, [image]);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Create a preview URL for the selected image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(file); // Set the raw file
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // const handleFormSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const response = await axios.post(
+  //     `https://vastubackend.onrender.com/api/v1/floorplan/new-floorplan/${id}`,
+
+  //     {
+  //       floorNumber: Number(floorNum),
+  //       description: description,
+  //       floorPlan: imageUrl,
+  //     },
+  //     {
+  //       withCredentials: true,
+  //     }
+  //   );
+
+  //   navigate("/profile");
+  // };
 
   return (
     <Card className="max-w-xl mx-auto mt-4 mb-4 border-2  ">
@@ -78,16 +83,7 @@ function FloorForm() {
         <CardTitle>Upload and Submit Floor Plan</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleUpload} className="space-y-4">
-          <Input
-            type="file"
-            label="Select Floor Plan"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <Button type="submit" variant="orange">
-            Upload
-          </Button>
-        </form>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
         {imageUrl && (
           <div className="mt-4">
             <h2 className="text-lg font-medium">

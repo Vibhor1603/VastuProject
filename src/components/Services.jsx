@@ -1,19 +1,19 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { ScrollText, Home, Compass, FileCheck, MessagesSquare, Sparkles } from 'lucide-react';
+import React from "react";
+import { ScrollText, Home, FileCheck } from "lucide-react";
 
 const ServiceCard = ({ icon: Icon, title, description }) => (
-  <div className="bg-gradient-to-br from-white to-orange-50 p-8 rounded-2xl shadow-lg hover:shadow-2 transition-all duration-500 border border-orange-100 hover:border-violet-400 group">
+  <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-shadow duration-500 border border-orange-200 group hover:border-orange-400">
     <div className="mb-6 flex justify-center">
-      <div className="p-4 bg-gradient-to-r from-orange-500 to-violet-500 rounded-xl text-white transform group-hover:scale-110 transition-transform duration-300">
-        <Icon size={32} />
+      <div className="p-4 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full text-white transform group-hover:scale-110 transition-transform duration-300">
+        <Icon size={36} />
       </div>
     </div>
-    <h3 className="text-xl font-bold mb-4 text-gray-800 text-center group-hover:text-violet-600 transition-colors duration-300">
+    <h3 className="text-2xl font-semibold mb-3 text-orange-700 text-center group-hover:text-orange-600 transition-colors duration-300">
       {title}
     </h3>
-    <p className="text-gray-600 text-center leading-relaxed">
+    <p className="text-gray-700 text-center leading-relaxed group-hover:text-gray-600 transition-colors duration-300">
       {description}
     </p>
   </div>
@@ -24,33 +24,30 @@ const Services = () => {
     {
       icon: Home,
       title: "Vastu Consultation",
-      description: "Expert guidance on harmonizing your living spaces with traditional Vastu principles for better energy flow."
+      description: "Guiding you to harmonize your space with Vastu principles.",
     },
     {
       icon: ScrollText,
       title: "Detailed Analysis",
-      description: "Comprehensive room-by-room analysis of your floor plan with specific recommendations for improvements."
+      description: "Room-by-room insights for positive energy flow.",
     },
-   
     {
       icon: FileCheck,
       title: "Custom Solutions",
-      description: "Personalized Vastu solutions that work with your existing space without major structural changes."
+      description: "Tailored recommendations for your space.",
     },
-   
-    
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-orange-50">
+    <section className="py-20 bg-gradient-to-b from-white via-orange-100 to-orange-500">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-orange-600 to-violet-600 text-transparent bg-clip-text">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-orange-700 text-transparent bg-clip-text">
             Our Services
           </h2>
-          <h3 className="text-gray-600 max-w-2xl mx-auto">
-            Discover our comprehensive range of Vastu consulting services designed to bring harmony and positive energy to your space
-          </h3>
+          <p className="text-gray-600 max-w-xl mx-auto">
+            Explore our expert Vastu consulting offerings.
+          </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (

@@ -30,6 +30,12 @@ export default function Navbar() {
         localStorage.setItem("projectId", "");
         localStorage.setItem("projectName", "");
         localStorage.setItem("floorID", "");
+        localStorage.setItem("description", "");
+        localStorage.setItem("markedImage", "");
+        localStorage.setItem("selectedFloorPlanId", "");
+        localStorage.setItem("selectedProjectID", "");
+        localStorage.setItem("floornum", "");
+        localStorage.setItem("userImage", "");
         const data = await response.json();
 
         navigate("/");
