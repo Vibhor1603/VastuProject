@@ -20,7 +20,7 @@ const About = () => {
         {/* Residential Vastu */}
         <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
           <img
-            src="https://files.oaiusercontent.com/file-QkpxFAx08hZ7F0imiWmpCogr?se=2024-11-18T23%3A54%3A22Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D3e6db3b1-c46c-43a1-ba99-93ccf55e5469.webp&sig=u004WYY7DxviwLLvwJ%2BZUBPcHaudU1aN2bN7goTzvWY%3D"
+            src="/image-1.jpg"
             alt="Residential Vastu"
             className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
           />
@@ -39,7 +39,7 @@ const About = () => {
         {/* Commercial Vastu */}
         <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
           <img
-            src="https://files.oaiusercontent.com/file-IltttBFu1C8AC5341HZWteQs?se=2024-11-18T23%3A55%3A06Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D5913ce47-1bc3-431e-8259-2934843e9659.webp&sig=4eccUpW0Ldk0m7xmBT84RvqSRTMAsv12nQyWjTjsF7Y%3D"
+            src="/commercial.jpg"
             alt="Commercial Vastu"
             className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
           />
@@ -58,7 +58,7 @@ const About = () => {
         {/* Online Consultation */}
         <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
           <img
-            src="https://files.oaiusercontent.com/file-OH1ZNCgG0ZsrZnF1suHg5AFo?se=2024-11-18T23%3A54%3A52Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Df033553b-6951-48a5-ab61-9f5f8efd5a5f.webp&sig=TOHy/HOHTaXUVLeGWx%2Bgkw%2BEgbZFZrvrwLNms1diE3M%3D"
+            src="/image-3.jpg"
             alt="Online Consultation"
             className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
           />
