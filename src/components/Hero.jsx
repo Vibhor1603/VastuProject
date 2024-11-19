@@ -1,9 +1,20 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Home, Building2, Compass } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Home, Building2, Compass } from "lucide-react";
+import checkAuthStatus from "@/hooks/userSession";
+import { useNavigate } from "react-router-dom";
 
-const Hero = () => {
+function Hero() {
+  const { isLoading, isAuthenticated } = checkAuthStatus();
+  const navigate = useNavigate();
+  function handleclick() {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/");
+    } else if (!isLoading && isAuthenticated) {
+      navigate("/project");
+    }
+  }
   return (
     <div className="relative min-h-[600px] w-full bg-gradient-to-b from-white via-orange-100 to-orange-500">
       <div className="container mx-auto px-4 py-20">
@@ -15,7 +26,9 @@ const Hero = () => {
             Transform Your Space with Vastu Shastra
           </h1>
           <p className="text-xl md:text-2xl text-gray-700 max-w-2xl">
-            Harmonize your home and workspace with authentic Vastu principles. Get personalized consultations to create balanced, prosperous, and positive environments.
+            Harmonize your home and workspace with authentic Vastu principles.
+            Get personalized consultations to create balanced, prosperous, and
+            positive environments.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full my-8">
             <div className="flex flex-col items-center space-y-2">
@@ -31,8 +44,9 @@ const Hero = () => {
               <p className="font-medium">Online Consultation</p>
             </div>
           </div>
-          <Button 
+          <Button
             className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-6 text-lg rounded-lg shadow-lg transition-all duration-300"
+            onClick={handleclick}
           >
             Book Your Vastu Consultation
           </Button>
@@ -43,6 +57,6 @@ const Hero = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Hero;
