@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Home, Building2, Compass } from "lucide-react";
 import checkAuthStatus from "@/hooks/userSession";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "./ui/alert";
 
 function Hero() {
   const { isLoading, isAuthenticated } = checkAuthStatus();
   const navigate = useNavigate();
   function handleclick() {
     if (!isLoading && !isAuthenticated) {
-      navigate("/");
+      alert("login first");
     } else if (!isLoading && isAuthenticated) {
       navigate("/project");
     }
