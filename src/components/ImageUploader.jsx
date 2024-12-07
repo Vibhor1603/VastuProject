@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import CompassOverlay from "./CompassOverlay";
+import CompassOverlay from "../pages/CompassOverlay";
 
 const ImageUploader = () => {
   const [image, setImage] = useState(null); // To store the image as a base64 string
-  const [imagePreview, setImagePreview] = useState(null); // To store the image preview URL
+  const [imagePreview, setImagePreview] = useState(null);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // To store the image preview URL
 
   // Retrieve the image from localStorage (if exists)
   useEffect(() => {

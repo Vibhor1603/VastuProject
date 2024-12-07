@@ -12,6 +12,7 @@ import Profile from "./Profile";
 import FloorForm from "@/components/FloorForm";
 import FloorPlans from "@/components/FloorPlans";
 import ImageUploader from "@/components/ImageUploader";
+import FloorPlanAnnotator from "@/pages/FloorPlanAnnotator";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
 
         <Route path="/floorplans" element={<FloorPlans />} />
+        <Route path="/annotate" element={<FloorPlanAnnotator />} />
         <Route path="/floorForm" element={<FloorForm />} />
       </Routes>
       <Footer />

@@ -9,11 +9,7 @@ function Profile() {
   const navigate = useNavigate();
   const [projects, setProjects] = React.useState([]);
   const { isLoading, isAuthenticated } = checkAuthStatus();
-
-  // if (!isAuthenticated) {
-  //   navigate("/");
-  //   console.log(isAuthenticated);
-  // }
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const [selectedProject, setSelectedProject] = React.useState(null);
 
@@ -24,6 +20,7 @@ function Profile() {
   function closeHandler() {
     setSelectedProject(null);
   }
+
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate("/");
@@ -32,8 +29,9 @@ function Profile() {
 
   useEffect(() => {
     async function getProjects() {
+      const role = localStorage.getItem("ROLE");
       const response = await fetch(
-        "https://vastubackend.onrender.com/api/v1/project/createdprojects",
+        `${BACKEND_URL}/api/v1/project/createdprojects`,
         {
           method: "GET",
           headers: {
@@ -43,7 +41,6 @@ function Profile() {
         }
       );
       const data = await response.json();
-
       setProjects(data);
     }
     getProjects();
@@ -52,6 +49,15 @@ function Profile() {
   function handlenewProject() {
     navigate("/project");
   }
+
+  // Get time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
     <>
       <div className="bg-orange-350 text-white h-full pb-72">
@@ -71,14 +77,19 @@ function Profile() {
                 d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
               />
             </svg>
-            <h3 className="text-purple-800 text-2xl font-bold">
-              Welcome to your project profile,{" "}
-              {localStorage.getItem("username")}
-            </h3>
+            <div>
+              <h3 className="text-purple-800 text-2xl font-bold">
+                {getGreeting()}, {localStorage.getItem("username")}
+              </h3>
+              <h4 className="text-gray-600 text-sm">
+                Welcome to your Vastu Guide dashboard
+              </h4>
+            </div>
           </div>
-          <button
-            onClick={handlenewProject}
-            className="
+          {localStorage.getItem("ROLE") === "USER" && (
+            <button
+              onClick={handlenewProject}
+              className="
       flex items-center space-x-2
       bg-gradient-to-r from-orange-600 to-amber-600 
       text-white 
@@ -90,21 +101,21 @@ function Profile() {
       shadow-md hover:shadow-lg 
       transform hover:-translate-y-0.5
     "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
             >
-              <path
-                fillRule="evenodd"
-                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>Create a new Project</span>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
         </div>
 
         {projects.length !== 0 ? (

@@ -23,7 +23,7 @@ export default function ProjectCard({ project, onClick }) {
             {project.name}
           </h3>
           <span className="text-[10px] sm:text-xs px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-full whitespace-nowrap">
-            {project.status || "Active"}
+            {project.status || ""}
           </span>
         </div>
 

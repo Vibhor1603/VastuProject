@@ -2,11 +2,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import { Eye } from "lucide-react";
-import "react-toastify/dist/ReactToastify.css";
-import { Item } from "@radix-ui/react-radio-group";
-import checkAuthStatus from "@/hooks/userSession";
+import toast from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 
 const Login = ({ onClose, success }) => {
@@ -15,6 +12,7 @@ const Login = ({ onClose, success }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsloading] = React.useState(false);
   const navigate = useNavigate();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   function passwordhandler() {
     setShowPassword((item) => !item);
@@ -23,34 +21,34 @@ const Login = ({ onClose, success }) => {
   const handleSubmit = async () => {
     setIsloading(true);
     try {
-      const response = await fetch(
-        "https://vastubackend.onrender.com/api/v1/user/signin",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/api/v1/user/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
 
       if (response.ok) {
         // Store the auth token in localStorage
         const data = await response.json();
 
         onClose();
-        success();
-        navigate("/profile");
-        toast.info("You are logged in successfully");
+        toast.success("You are logged in successfully");
         setIsloading(false);
+        navigate("/profile");
+        success();
       } else {
         // Handle login error
         const data = await response.json();
+        toast.success(data.message);
+        setIsloading(false);
         console.log(data);
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      toast.error("Failed to login , please try again later");
+      setIsloading(false);
     }
   };
 
@@ -114,6 +112,7 @@ const Login = ({ onClose, success }) => {
                 wrapperClass=""
                 visible={true}
                 ariaLabel="oval-loading"
+                D
                 secondaryColor="#4fa94d"
                 strokeWidth={8}
                 strokeWidthSecondary={2}
@@ -137,17 +136,6 @@ const Login = ({ onClose, success }) => {
           </div>
         </form>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };

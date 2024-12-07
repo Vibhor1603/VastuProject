@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Layers, Loader2, Building, ArrowLeft, X } from "lucide-react";
+import {
+  Layers,
+  Loader2,
+  Building,
+  ArrowLeft,
+  X,
+  ImageIcon,
+} from "lucide-react";
 import checkAuthStatus from "@/hooks/userSession";
 
 const FloorPlans = () => {
   const [floorPlans, setFloorPlans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState({
+    rawImg: null,
+    markedImg: null,
+    annotatedImg: null,
+  });
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const [activeImageType, setActiveImageType] = useState(null);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = checkAuthStatus();
   const selectedProjectID = localStorage.getItem("selectedProjectID");
@@ -20,7 +33,7 @@ const FloorPlans = () => {
     const fetchFloorPlans = async () => {
       try {
         const response = await fetch(
-          `https://vastubackend.onrender.com/api/v1/floorplan/floorplans/${selectedProjectID}`,
+          `${BACKEND_URL}/api/v1/floorplan/floorplans/${selectedProjectID}`,
           { credentials: "include" }
         );
         const data = await response.json();
@@ -36,7 +49,70 @@ const FloorPlans = () => {
   }, [isAuthenticated, isLoading, navigate, selectedProjectID]);
 
   const handleFloorPlanClick = (plan) => {
-    setSelectedImage(plan.floorplan); // Assuming there's an image field in your floor plan data
+    setSelectedImages({
+      rawImg: plan.raw_img,
+      markedImg: plan.marked_img,
+      annotatedImg: plan.annotated_img,
+    });
+    setActiveImageType("raw");
+  };
+
+  const closeImageModal = () => {
+    setSelectedImages({
+      rawImg: null,
+      markedImg: null,
+      annotatedImg: null,
+    });
+    setActiveImageType(null);
+  };
+
+  const renderImageModal = () => {
+    const currentImage = selectedImages[`${activeImageType}Img`];
+    if (!currentImage) return null;
+
+    return (
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+        onClick={closeImageModal}
+      >
+        <div
+          className="relative max-w-5xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Image Navigation */}
+          <div className="absolute top-4 left-4 flex gap-2 z-10">
+            {["raw", "marked", "annotated"].map((type) => (
+              <button
+                key={type}
+                onClick={() => setActiveImageType(type)}
+                className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                  activeImageType === type
+                    ? "bg-orange-600 text-white"
+                    : "bg-white/80 text-gray-700 hover:bg-orange-100"
+                }`}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)} Image
+              </button>
+            ))}
+          </div>
+
+          {/* Close Button */}
+          <button
+            onClick={closeImageModal}
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 z-10"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Image */}
+          <img
+            src={currentImage}
+            alt={`${activeImageType} Floor Plan`}
+            className="w-full h-auto max-h-[80vh] object-contain"
+          />
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -55,7 +131,7 @@ const FloorPlans = () => {
       <div className="max-w-6xl mx-auto">
         <button
           onClick={() => navigate("/profile")}
-          className="flex items-center gap-2 text-orange-600 hover:text-orange-700 mb-6 bg-orange-100 hover:bg-orange-200 px-4 py-2 rounded-lg"
+          className="flex items-center gap-2 text-orange-600 hover:text-orange-700 mb-6 bg-orange-100 hover:bg-orange-200 px-4 py-2 rounded-lg transition-all"
         >
           <ArrowLeft size={20} />
           <span>Back to Project Details</span>
@@ -78,21 +154,34 @@ const FloorPlans = () => {
                 <div
                   key={plan._id}
                   onClick={() => handleFloorPlanClick(plan)}
-                  className="bg-orange-50 border border-orange-200 rounded-lg p-4 hover:bg-orange-100 cursor-pointer transition-colors group"
+                  className="bg-orange-50 border border-orange-200 rounded-lg p-4 hover:bg-orange-100 cursor-pointer transition-all group shadow-md hover:shadow-lg"
                 >
-                  <h3 className="text-lg font-semibold text-orange-800 mb-2">
-                    Floor {plan.floornumber}
-                  </h3>
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-lg font-semibold text-orange-800">
+                      Floor {plan.floornumber}
+                    </h3>
+                    <div className="flex gap-1">
+                      {[plan.raw_img, plan.marked_img, plan.annotated_img]
+                        .filter(Boolean)
+                        .map((img, index) => (
+                          <ImageIcon
+                            key={index}
+                            size={16}
+                            className="text-orange-400 opacity-50"
+                          />
+                        ))}
+                    </div>
+                  </div>
                   <p className="text-orange-600 line-clamp-2 mb-4">
                     {plan.description || "No description"}
                   </p>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-orange-500 group-hover:text-orange-700">
+                    <span className="text-sm text-orange-500 group-hover:text-orange-700 transition-colors">
                       View Details
                     </span>
                     <Building
                       size={20}
-                      className="text-orange-400 group-hover:text-orange-600"
+                      className="text-orange-400 group-hover:text-orange-600 transition-colors"
                     />
                   </div>
                 </div>
@@ -102,30 +191,8 @@ const FloorPlans = () => {
         </div>
       </div>
 
-      {/* Image Popup */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div
-            className="relative max-w-4xl w-full bg-white rounded-lg shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute top-2 right-2 p-1 rounded-full bg-white/80 hover:bg-white text-gray-800"
-            >
-              <X size={24} />
-            </button>
-            <img
-              src={selectedImage}
-              alt="Floor Plan"
-              className="w-full h-auto rounded-lg"
-            />
-          </div>
-        </div>
-      )}
+      {/* Image Modal */}
+      {activeImageType && renderImageModal()}
     </div>
   );
 };

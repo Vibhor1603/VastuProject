@@ -25,25 +25,24 @@ const VastuForm = () => {
     consultantid: "",
   });
   const [isLoading, setIsloading] = React.useState(false);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   async function submitForm() {
     setIsloading(true);
     try {
-      const response = await fetch(
-        "https://vastubackend.onrender.com/api/v1/project/newproject",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/api/v1/project/newproject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
       if (response.ok) {
         setIsloading(false);
         const data = await response.json();
         localStorage.setItem("projectId", data.id);
+        localStorage.setItem("floorcount", formData.floorcount);
         const match = data.message.match(/Project (.+) created successfully/);
         const projectName = match ? match[1] : "";
         localStorage.setItem("projectName", projectName);

@@ -27,6 +27,7 @@ const ContactPage = () => {
     mobile: "",
     feedback: "",
   });
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,7 +36,7 @@ const ContactPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/feedbacks`, {
+      const response = await fetch(`${BACKEND_URL}/feedbacks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

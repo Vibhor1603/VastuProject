@@ -9,33 +9,23 @@ export default function Navbar() {
   const [openSignup, setOpenSignUp] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(
-        "https://vastubackend.onrender.com/api/v1/user/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/api/v1/user/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
       if (response.ok) {
         setIsLoggedIn(false);
-        localStorage.setItem("username", "");
-        localStorage.setItem("projectId", "");
-        localStorage.setItem("projectName", "");
-        localStorage.setItem("floorID", "");
-        localStorage.setItem("description", "");
-        localStorage.setItem("markedImage", "");
-        localStorage.setItem("selectedFloorPlanId", "");
-        localStorage.setItem("selectedProjectID", "");
-        localStorage.setItem("floornum", "");
-        localStorage.setItem("userImage", "");
+
+        localStorage.clear();
         const data = await response.json();
 
         navigate("/");
@@ -51,17 +41,16 @@ export default function Navbar() {
   useEffect(() => {
     async function userAuth() {
       try {
-        const response = await fetch(
-          "https://vastubackend.onrender.com/api/v1/user/session",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${BACKEND_URL}/api/v1/user/session`, {
+          method: "GET",
+          credentials: "include",
+        });
         if (response.ok) {
           const data = await response.json();
-          // console.log(data);
+
           localStorage.setItem("username", data.username);
+          localStorage.setItem("ROLE", data.role);
+
           setIsLoggedIn(data.isAuthenticated);
           // Set based on server response
         } else {
@@ -74,13 +63,7 @@ export default function Navbar() {
     }
     userAuth();
   }, []);
-  // useEffect(() => {
-  //   setIsLoggedIn(isAuthenticated);
-  // }, []);
 
-  // useEffect(() => {
-  //   setIsLoggedIn(checkAuthStatus());
-  // }, []);
   return (
     <nav className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
       <div className="container mx-auto px-2">
@@ -101,18 +84,9 @@ export default function Navbar() {
               Home
             </NavLink>
 
-            {isLoggedIn ? (
+            {isLoggedIn && localStorage.getItem("ROLE") === "USER" && (
               <NavLink
                 to="/project"
-                className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
-              >
-                Create a Project
-              </NavLink>
-            ) : (
-              <NavLink
-                onClick={() => {
-                  setOpenLogin(true);
-                }}
                 className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
               >
                 Create a Project
@@ -197,18 +171,9 @@ export default function Navbar() {
             >
               Home
             </NavLink>
-            {isLoggedIn ? (
+            {isLoggedIn && localStorage.getItem("ROLE") === "USER" && (
               <NavLink
                 to="/project"
-                className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
-              >
-                Create a Project
-              </NavLink>
-            ) : (
-              <NavLink
-                onClick={() => {
-                  setOpenLogin(true);
-                }}
                 className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
               >
                 Create a Project
