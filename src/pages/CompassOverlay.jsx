@@ -93,7 +93,7 @@ const CompassOverlay = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/v1/floorplan/image-upload",
+          "https://vastubackend.onrender.com/api/v1/floorplan/image-upload",
           formData
         );
         const data = await response.data;
