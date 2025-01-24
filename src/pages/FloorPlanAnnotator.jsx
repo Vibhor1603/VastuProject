@@ -148,7 +148,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
     if (imageUrl) {
       try {
         const response = await axios.post(
-          `ttps://vastubackend.onrender.com/api/v1/floorplan/new-floorplan/${id}`,
+          `https://vastubackend.onrender.com/api/v1/floorplan/new-floorplan/${id}`,
 
           {
             floorNumber: Number(localStorage.getItem("floornum")),
