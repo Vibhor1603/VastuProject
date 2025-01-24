@@ -156,6 +156,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
             markedImg: localStorage.getItem("marked_img"),
             rawImg: localStorage.getItem("raw_img"),
             annotatedImg: imageUrl,
+            rooms: rooms,
           },
           {
             withCredentials: true,
