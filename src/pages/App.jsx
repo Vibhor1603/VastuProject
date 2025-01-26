@@ -13,6 +13,8 @@ import FloorForm from "@/components/FloorForm";
 import FloorPlans from "@/components/FloorPlans";
 import ImageUploader from "@/components/ImageUploader";
 import FloorPlanAnnotator from "@/pages/FloorPlanAnnotator";
+import Report from "@/pages/Report";
+import ViewReport from "@/pages/ViewReport";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path="/floorplans" element={<FloorPlans />} />
         <Route path="/annotate" element={<FloorPlanAnnotator />} />
         <Route path="/floorForm" element={<FloorForm />} />
+        <Route path="/reports/:plan" element={<Report />} />
+        <Route path="/viewreport/:plan" element={<ViewReport />} />
       </Routes>
       <Footer />
     </Router>

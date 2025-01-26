@@ -62,7 +62,7 @@ export default function Navbar() {
       }
     }
     userAuth();
-  }, []);
+  }, [navigate]);
 
   return (
     <nav className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
@@ -84,13 +84,15 @@ export default function Navbar() {
               Home
             </NavLink>
 
-            {isLoggedIn && localStorage.getItem("ROLE") === "USER" && (
+            {isLoggedIn && localStorage.getItem("ROLE") === "USER" ? (
               <NavLink
                 to="/project"
                 className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
               >
                 Create a Project
               </NavLink>
+            ) : (
+              <></>
             )}
 
             {isLoggedIn ? (

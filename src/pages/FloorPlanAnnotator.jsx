@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import html2canvas from "html2canvas";
 import checkAuthStatus from "@/hooks/userSession";
 import { useNavigate } from "react-router-dom";
@@ -18,15 +19,23 @@ import toast from "react-hot-toast";
 // Function to convert angle to compass direction
 const getCompassDirection = (angle) => {
   const directions = [
-    { range: [337.5, 360], name: "N" },
-    { range: [0, 22.5], name: "N" },
-    { range: [22.5, 67.5], name: "NE" },
-    { range: [67.5, 112.5], name: "E" },
-    { range: [112.5, 157.5], name: "SE" },
-    { range: [157.5, 202.5], name: "S" },
-    { range: [202.5, 247.5], name: "SW" },
-    { range: [247.5, 292.5], name: "W" },
-    { range: [292.5, 337.5], name: "NW" },
+    { range: [348.75, 360], name: "N" },
+    { range: [0, 11.25], name: "N" },
+    { range: [11.25, 33.75], name: "NNE" },
+    { range: [33.75, 56.25], name: "NE" },
+    { range: [56.25, 78.75], name: "ENE" },
+    { range: [78.75, 101.25], name: "E" },
+    { range: [101.25, 123.75], name: "ESE" },
+    { range: [123.75, 146.25], name: "SE" },
+    { range: [146.25, 168.75], name: "SSE" },
+    { range: [168.75, 191.25], name: "S" },
+    { range: [191.25, 213.75], name: "SSW" },
+    { range: [213.75, 236.25], name: "SW" },
+    { range: [236.25, 258.75], name: "WSW" },
+    { range: [258.75, 281.25], name: "W" },
+    { range: [281.25, 303.75], name: "WNW" },
+    { range: [303.75, 326.25], name: "NW" },
+    { range: [326.25, 348.75], name: "NNW" },
   ];
 
   const matchedDirection = directions.find(
@@ -54,8 +63,10 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
     text: "",
     note: "",
   });
+  const [compassSize, setCompassSize] = useState(350); // New state for compass size
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+  const raw_img = localStorage.getItem("raw_img");
 
   useEffect(() => {
     if (!isLoading) {
@@ -172,53 +183,6 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
     }
   };
   const formData = new FormData();
-  // const handleUpload = async () => {
-  //   setLoading(true);
-
-  //   // Check if `exportedImage` exists (data URL)
-  //   if (exportedImage) {
-  //     // Convert base64 to Blob
-  //     const base64String = exportedImage.split(",")[1];
-  //     const byteCharacters = atob(base64String);
-  //     const byteNumbers = new Array(byteCharacters.length);
-
-  //     for (let i = 0; i < byteCharacters.length; i++) {
-  //       byteNumbers[i] = byteCharacters.charCodeAt(i);
-  //     }
-
-  //     const byteArray = new Uint8Array(byteNumbers);
-  //     const blob = new Blob([byteArray], { type: "image/png" });
-
-  //     formData.append("userName", localStorage.getItem("username"));
-  //     formData.append("projectName", localStorage.getItem("projectName"));
-  //     formData.append("image", blob, "capturedImage.png");
-  //     formData.append("floorNum", localStorage.getItem("floornum"));
-
-  //     try {
-  //       const response = await axios.post(
-  //         "http://localhost:3000/api/v1/floorplan/image-upload",
-  //         formData
-  //       );
-  //       const data = await response.data;
-
-  //       // Check and set the returned image URL
-  //       if (data.imageURL && data.imageURL.url) {
-  //         setImageUrl(data.imageURL.url);
-  //         alert("Image uploaded successfully!");
-  //         setLoading(false);
-  //       } else {
-  //         console.error("Unexpected response format:", data);
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error uploading the image:", error);
-  //       setLoading(false);
-  //     }
-  //   } else {
-  //     console.error("No image available for upload.");
-  //     setLoading(false);
-  //   }
-  // };
 
   const captureAnnotatedImage = async () => {
     const container = containerRef.current;
@@ -478,12 +442,31 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
         </Card>
       )}
 
-      {/* Compass */}
-      <div className="mx-auto mt-2 ml-5">
+      {/* Compass Section with Size Slider */}
+      <div className=" absolute top-20 left-20 p-4 z-10 w-64 flex flex-col items-center">
         <Compass
           onNeedleAngleChange={(angle) => setCompassAngle(angle)}
-          imageUrl={"/example6.png"}
+          imageUrl={raw_img}
+          compassSize={compassSize} // Dynamic compass size
         />
+        <div className="mt-2 text-1xl text-gray-600 text-center">
+          mark the entrance
+        </div>
+
+        {/* Compass Size Slider */}
+        <div className="w-40 mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            adjust Size
+          </label>
+          <Slider
+            defaultValue={[compassSize]}
+            max={600}
+            min={200}
+            step={10}
+            onValueChange={(value) => setCompassSize(value[0])}
+            className="w-full"
+          />
+        </div>
       </div>
       <button className="bg-red" onClick={captureAnnotatedImage}>
         Capture

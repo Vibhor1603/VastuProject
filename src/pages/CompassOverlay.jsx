@@ -7,18 +7,19 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import checkAuthStatus from "@/hooks/userSession";
 import { Oval } from "react-loader-spinner";
+import toast from "react-hot-toast";
 
 const CompassOverlay = () => {
   const backgroundImage = localStorage.getItem("raw_img");
-  //   const [backgroundImage, setBackgroundImage] = useState(null);
-  const [exportedImage, setExportedImage] = useState(null);
   const containerRef = useRef(null);
   const [angle, setAngle] = useState(0);
-  const [uploadedImage, setUploadedImage] = React.useState();
-  const [imageUrl, setImageUrl] = React.useState(null);
+  const [compassSize, setCompassSize] = useState(400);
+  const [exportedImage, setExportedImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState();
+  const [imageUrl, setImageUrl] = useState(null);
   const { isLoading, isAuthenticated, userRole } = checkAuthStatus();
-  const [loading, setLoading] = React.useState(false);
-  const [Analysisloading, setAnalysisLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [Analysisloading, setAnalysisLoading] = useState(false);
   const formData = new FormData();
   const navigate = useNavigate();
 
@@ -39,23 +40,12 @@ const CompassOverlay = () => {
     }
   }, [isLoading, isAuthenticated, navigate, userRole]);
 
-  //   const handleImageUpload = (event) => {
-  //     const file = event.target.files[0];
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onload = (e) => {
-  //         setBackgroundImage(localStorage);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   };
-
   const captureImage = async () => {
     if (containerRef.current) {
       try {
         const canvas = await html2canvas(containerRef.current, {
           backgroundColor: null,
-          scale: 2, // Higher quality
+          scale: 2,
           logging: false,
           useCORS: true,
         });
@@ -66,15 +56,14 @@ const CompassOverlay = () => {
       }
     }
   };
+
   const id = localStorage.getItem("projectId");
 
   const handleUpload = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Check if `exportedImage` exists (data URL)
     if (exportedImage) {
-      // Convert base64 to Blob
       const base64String = exportedImage.split(",")[1];
       const byteCharacters = atob(base64String);
       const byteNumbers = new Array(byteCharacters.length);
@@ -98,9 +87,7 @@ const CompassOverlay = () => {
         );
         const data = await response.data;
 
-        // Check and set the returned image URL
         if (data.imageURL && data.imageURL.url) {
-          // setImageUrl(data.imageURL.url);
           localStorage.setItem("marked_img", data.imageURL.url);
           alert("Image uploaded successfully!");
           setLoading(false);
@@ -119,35 +106,24 @@ const CompassOverlay = () => {
     }
   };
 
-  // const sendForAnalysis = async () => {
-  //   setAnalysisLoading(true);
-  //   if (exportedImage) {
-  //     try {
-  //       const response = await axios.post(
-  //         `http://localhost:3000/api/v1/floorplan/new-floorplan/${id}`,
-
-  //         {
-  //           floorNumber: Number(localStorage.getItem("floornum")),
-  //           description: localStorage.getItem("description"),
-  //           markedImg: imageUrl,
-  //           rawImg: localStorage.getItem("raw_img"),
-  //         },
-  //         {
-  //           withCredentials: true,
-  //         }
-  //       );
-  //       setAnalysisLoading(false);
-  //       navigate("/profile");
-  //       alert("Image sent for analysis!");
-  //     } catch (error) {
-  //       console.error("Error storing image in localStorage:", error);
-  //       setAnalysisLoading(false);
-  //     }
-  //   }
-  // };
-
   return (
-    <div className="flex flex-col items-center gap-2 p-2">
+    <div className="flex flex-col items-center gap-2 p-2 relative">
+      {/* Compass Size Slider */}
+      <div className="absolute left-4 top-4 z-10 bg-white p-4 rounded-lg shadow-md">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Compass Size
+        </label>
+        <input
+          type="range"
+          min="200"
+          max="600"
+          value={compassSize}
+          onChange={(e) => setCompassSize(parseInt(e.target.value))}
+          className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+        />
+        <div className="text-xs text-gray-600 mt-2">{compassSize} px</div>
+      </div>
+
       <Card className="p-2 w-full max-w-3xl">
         <div className="flex flex-col gap-2">
           <div className="relative w-full aspect-square" ref={containerRef}>
@@ -160,8 +136,8 @@ const CompassOverlay = () => {
             )}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <Compass
-                // imageUrl={backgroundImage}
                 onNeedleAngleChange={(newAngle) => setAngle(newAngle)}
+                compassSize={compassSize}
               />
             </div>
           </div>
@@ -210,26 +186,6 @@ const CompassOverlay = () => {
                 Submit floor plan
               </Button>
             )}
-            {Analysisloading ? (
-              <Oval
-                height={20}
-                width={20}
-                color="#4fa94d"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-                ariaLabel="oval-loading"
-                secondaryColor="#4fa94d"
-                strokeWidth={8}
-                strokeWidthSecondary={2}
-              />
-            ) : // <Button
-            //   onClick={sendForAnalysis}
-            //   className="bg-green-600 hover:bg-green-700 text-white"
-            // >
-            //   Send for Analysis
-            // </Button>
-            null}
           </div>
         </Card>
       )}

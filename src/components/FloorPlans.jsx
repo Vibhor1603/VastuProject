@@ -9,10 +9,13 @@ import {
   ImageIcon,
 } from "lucide-react";
 import checkAuthStatus from "@/hooks/userSession";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const FloorPlans = () => {
   const [floorPlans, setFloorPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPlan, setCurrentPlan] = useState(null);
   const [selectedImages, setSelectedImages] = useState({
     rawImg: null,
     markedImg: null,
@@ -23,6 +26,7 @@ const FloorPlans = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = checkAuthStatus();
   const selectedProjectID = localStorage.getItem("selectedProjectID");
+  const role = localStorage.getItem("ROLE"); // Fetch role from localStorage
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -54,6 +58,7 @@ const FloorPlans = () => {
       markedImg: plan.marked_img,
       annotatedImg: plan.annotated_img,
     });
+    setCurrentPlan(plan);
     setActiveImageType("raw");
   };
 
@@ -64,6 +69,29 @@ const FloorPlans = () => {
       annotatedImg: null,
     });
     setActiveImageType(null);
+  };
+
+  const reviewClick = async () => {
+    if (role === "CONSULTANT") {
+      try {
+        await axios.put(
+          `${BACKEND_URL}/api/v1/project/select-review/${selectedProjectID}`,
+          null,
+          { withCredentials: true }
+        );
+        toast.success("Review started successfully!");
+        navigate(`/reports/${currentPlan.id}`); // Navigate to /reports
+        closeImageModal(); // Close modal after action
+      } catch (error) {
+        toast.error("Server error, please try again later");
+        console.error(error);
+        navigate("/profile");
+        closeImageModal();
+      }
+    } else if (role === "USER") {
+      navigate(`/viewreport/${currentPlan.id}`); // Navigate to /reports
+      closeImageModal(); // Close modal after action
+    }
   };
 
   const renderImageModal = () => {
@@ -110,6 +138,27 @@ const FloorPlans = () => {
             alt={`${activeImageType} Floor Plan`}
             className="w-full h-auto max-h-[80vh] object-contain"
           />
+
+          {/* Start Review Button for CONSULTANT Role */}
+          {role === "CONSULTANT" ? (
+            <div className="p-4 bg-orange-50 text-center">
+              <button
+                onClick={reviewClick}
+                className="px-6 py-2 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-all"
+              >
+                Start Review
+              </button>
+            </div>
+          ) : (
+            <div className="p-4 bg-orange-50 text-center">
+              <button
+                onClick={reviewClick}
+                className="px-6 py-2 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-all"
+              >
+                View Report
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
