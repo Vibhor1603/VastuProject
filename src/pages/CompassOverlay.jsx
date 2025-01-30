@@ -79,16 +79,18 @@ const CompassOverlay = () => {
       formData.append("projectName", localStorage.getItem("projectName"));
       formData.append("image", blob, "capturedImage.png");
       formData.append("floorNum", localStorage.getItem("floornum"));
+      formData.append("type", "marked");
+      formData.append("floorId", localStorage.getItem("floorId"));
+      formData.append("projectId", localStorage.getItem("projectId"));
 
       try {
         const response = await axios.post(
           "https://vastubackend.onrender.com/api/v1/floorplan/image-upload",
           formData
         );
-        const data = await response.data;
+        if (response.status === 200) {
+          const data = await response.data;
 
-        if (data.imageURL && data.imageURL.url) {
-          localStorage.setItem("marked_img", data.imageURL.url);
           alert("Image uploaded successfully!");
           setLoading(false);
           navigate("/annotate");

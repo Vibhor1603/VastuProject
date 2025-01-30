@@ -54,12 +54,13 @@ function FloorForm() {
 
   const username = localStorage.getItem("username");
   const maxFloors = localStorage.getItem("floorcount");
+  const projectId = localStorage.getItem("projectId");
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  // const handleFormSubmit = async (e) => {
+  //   e.preventDefault();
 
-    navigate("/editedimg");
-  };
+  //   navigate("/editedimg");
+  // };
   const id = localStorage.getItem("projectId");
 
   const handleFileChange = (event) => {
@@ -83,6 +84,10 @@ function FloorForm() {
     formData.append("projectName", projectName);
     formData.append("userName", username);
     formData.append("floorNum", floorNum);
+    formData.append("type", "raw");
+    formData.append("description", description);
+    formData.append("projectId", projectId);
+
     try {
       const response = await axios.post(
         `${BACKEND_URL}/api/v1/floorplan/image-upload`,
@@ -95,12 +100,15 @@ function FloorForm() {
         }
       );
       const data = await response.data;
-      console.log(data);
+      localStorage.setItem("floorId", data.floorId);
+      localStorage.setItem("raw_img", data.imageURL.url);
+      navigate("/editedimg");
+
       setSubmit(true);
       toast.success("image uploaded");
-      localStorage.setItem("floornum", floorNum);
-      localStorage.setItem("description", description);
-      localStorage.setItem("raw_img", data.imageURL.url);
+      // localStorage.setItem("floornum", floorNum);
+      // localStorage.setItem("description", description);
+      // localStorage.setItem("raw_img", data.imageURL.url);
     } catch (error) {
       console.error(error);
       toast.error("error uploading image");
@@ -139,7 +147,7 @@ function FloorForm() {
             </h2>
           </div>
         )}
-        <form onSubmit={handleFormSubmit} className="mt-6 space-y-4">
+        <form className="mt-6 space-y-4">
           <div>
             <label htmlFor="floorNum" className="block mb-1">
               Floor Number
@@ -168,16 +176,21 @@ function FloorForm() {
               }}
             />
           </div>
-          <button onClick={uploadFunction}>Upload Image for submit</button>
+          <button
+            className=" w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={uploadFunction}
+          >
+            Next
+          </button>
 
-          <Button
+          {/* <Button
             type="submit"
             variant="orange"
             disabled={!submit}
             className=" w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Submit for Consultation
-          </Button>
+          </Button> */}
         </form>
       </CardContent>
     </Card>

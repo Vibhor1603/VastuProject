@@ -164,9 +164,9 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
           {
             floorNumber: Number(localStorage.getItem("floornum")),
             description: localStorage.getItem("description"),
-            markedImg: localStorage.getItem("marked_img"),
-            rawImg: localStorage.getItem("raw_img"),
-            annotatedImg: imageUrl,
+            // markedImg: localStorage.getItem("marked_img"),
+            // rawImg: localStorage.getItem("raw_img"),
+            // annotatedImg: imageUrl,
             rooms: rooms,
           },
           {
@@ -218,6 +218,9 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
         formData.append("projectName", localStorage.getItem("projectName"));
         formData.append("image", blob, "capturedImage.png");
         formData.append("floorNum", localStorage.getItem("floornum"));
+        formData.append("type", "annotated");
+        formData.append("projectId", localStorage.getItem("projectId"));
+        formData.append("floorId", localStorage.getItem("floorId"));
 
         try {
           const response = await axios.post(
