@@ -9,12 +9,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import VastuForm from "../components/VastuForm";
 import ContactPage from "../components/Contact";
 import Profile from "./Profile";
-import FloorForm from "@/components/FloorForm";
+import FloorForm from "@/pages/FloorForm";
 import FloorPlans from "@/components/FloorPlans";
 import ImageUploader from "@/components/ImageUploader";
 import FloorPlanAnnotator from "@/pages/FloorPlanAnnotator";
 import Report from "@/pages/Report";
 import ViewReport from "@/pages/ViewReport";
+import NotFound from "./NotFound";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route index element={<Root />} />
+        <Route path="*" element={<NotFound />} />
         <Route path="/home" element={<Root />} />
         <Route path="/editedimg" element={<ImageUploader />} />
         <Route path="/project" element={<VastuForm />} />
@@ -30,7 +32,7 @@ function App() {
 
         <Route path="/floorplans" element={<FloorPlans />} />
         <Route path="/annotate" element={<FloorPlanAnnotator />} />
-        <Route path="/floorForm" element={<FloorForm />} />
+        <Route path="/floorForm/:projectName" element={<FloorForm />} />
         <Route path="/reports/:plan" element={<Report />} />
         <Route path="/viewreport/:plan" element={<ViewReport />} />
       </Routes>

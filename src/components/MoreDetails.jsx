@@ -36,9 +36,9 @@ function MoreDetails({ selectedProject, onClose }) {
 
   const createFloorPlan = () => {
     localStorage.setItem("projectId", selectedProject.id);
-    localStorage.setItem("projectName", selectedProject.name);
+
     localStorage.setItem("floorcount", selectedProject.numFloors);
-    navigate("/floorForm");
+    navigate(`/floorForm/${selectedProject.name}`);
   };
 
   const reviewClick = async () => {
@@ -168,15 +168,7 @@ function MoreDetails({ selectedProject, onClose }) {
             >
               Upload Floor Plan
             </button>
-          ) : (
-            <button
-              onClick={reviewClick}
-              className="px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-700  font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1"
-              type="button"
-            >
-              Start Review
-            </button>
-          )}
+          ) : null}
         </div>
 
         {/* Delete Button */}

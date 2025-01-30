@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   Card,
@@ -24,6 +24,8 @@ function FloorForm() {
   const [image, setImage] = React.useState(null);
   const [submit, setSubmit] = React.useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const { projectName } = useParams();
+  console.log(projectName);
 
   useEffect(() => {
     if (!isLoading) {
@@ -35,7 +37,7 @@ function FloorForm() {
         toast.error("not authenticated");
         navigate("/");
         console.log(isAuthenticated);
-      } else if (!localStorage.getItem("projectName")) {
+      } else if (!projectName) {
         toast.error("create a project first");
         navigate("/");
       }
@@ -50,7 +52,6 @@ function FloorForm() {
 
   const formData = new FormData();
 
-  const projectName = localStorage.getItem("projectName");
   const username = localStorage.getItem("username");
   const maxFloors = localStorage.getItem("floorcount");
 

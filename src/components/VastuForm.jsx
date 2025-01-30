@@ -27,6 +27,7 @@ const VastuForm = () => {
   const [isLoading, setIsloading] = React.useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
+
   async function submitForm() {
     setIsloading(true);
     try {
@@ -45,8 +46,7 @@ const VastuForm = () => {
         localStorage.setItem("floorcount", formData.floorcount);
         const match = data.message.match(/Project (.+) created successfully/);
         const projectName = match ? match[1] : "";
-        localStorage.setItem("projectName", projectName);
-        navigate("/floorForm");
+        navigate(`/floorForm/${projectName}`);
       }
     } catch (error) {
       console.log({ err: error });

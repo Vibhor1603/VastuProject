@@ -79,7 +79,7 @@ const Signup = ({ onClose }) => {
               htmlFor="phone number"
               className="block text-gray-700 font-bold mb-2"
             >
-              PhONE number
+              Phone number
             </label>
             <input
               type="text"
