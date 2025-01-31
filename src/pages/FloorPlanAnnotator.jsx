@@ -15,6 +15,7 @@ import {
 import { Trash2, Save, MapPin } from "lucide-react";
 import Compass from "../components/Compass";
 import toast from "react-hot-toast";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Function to convert angle to compass direction
 const getCompassDirection = (angle) => {
@@ -59,6 +60,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = React.useState(null);
   const [exportedImage, setExportedImage] = useState(null);
+
   const [roomDetails, setRoomDetails] = useState({
     text: "",
     note: "",
@@ -159,7 +161,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
     if (imageUrl) {
       try {
         const response = await axios.post(
-          `https://vastubackend.onrender.com/api/v1/floorplan/new-floorplan/${id}`,
+          `${BACKEND_URL}/api/v1/floorplan/new-floorplan/${id}`,
 
           {
             floorNumber: Number(localStorage.getItem("floornum")),
@@ -219,12 +221,11 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
         formData.append("image", blob, "capturedImage.png");
         formData.append("floorNum", localStorage.getItem("floornum"));
         formData.append("type", "annotated");
-        formData.append("projectId", localStorage.getItem("projectId"));
         formData.append("floorId", localStorage.getItem("floorId"));
 
         try {
           const response = await axios.post(
-            `${BACKEND_URL}/api/v1/floorplan/image-upload`,
+            `${BACKEND_URL}/api/v1/floorplan/image-upload/${id}`,
             formData
           );
           const data = await response.data;

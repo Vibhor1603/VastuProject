@@ -25,7 +25,6 @@ function FloorForm() {
   const [submit, setSubmit] = React.useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const { projectName } = useParams();
-  console.log(projectName);
 
   useEffect(() => {
     if (!isLoading) {
@@ -101,10 +100,12 @@ function FloorForm() {
       const data = await response.data;
       localStorage.setItem("floorId", data.floorId);
       localStorage.setItem("raw_img", data.imageURL.url);
+      localStorage.setItem("projectName", projectName);
+
+      toast.success("image uploaded");
       navigate("/editedimg");
 
       setSubmit(true);
-      toast.success("image uploaded");
       // localStorage.setItem("floornum", floorNum);
       // localStorage.setItem("description", description);
       // localStorage.setItem("raw_img", data.imageURL.url);

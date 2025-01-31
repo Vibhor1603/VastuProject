@@ -20,7 +20,7 @@ const CompassOverlay = () => {
   const { isLoading, isAuthenticated, userRole } = checkAuthStatus();
   const [loading, setLoading] = useState(false);
   const [Analysisloading, setAnalysisLoading] = useState(false);
-  const formData = new FormData();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +62,7 @@ const CompassOverlay = () => {
   const handleUpload = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const formData = new FormData();
 
     if (exportedImage) {
       const base64String = exportedImage.split(",")[1];
@@ -81,11 +82,10 @@ const CompassOverlay = () => {
       formData.append("floorNum", localStorage.getItem("floornum"));
       formData.append("type", "marked");
       formData.append("floorId", localStorage.getItem("floorId"));
-      formData.append("projectId", localStorage.getItem("projectId"));
 
       try {
         const response = await axios.post(
-          "https://vastubackend.onrender.com/api/v1/floorplan/image-upload",
+          `${BACKEND_URL}/api/v1/floorplan/image-upload/${id}`,
           formData
         );
         if (response.status === 200) {
