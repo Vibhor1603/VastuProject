@@ -98,15 +98,16 @@ function FloorForm() {
         }
       );
       const data = await response.data;
-      localStorage.setItem("floorId", data.floorId);
+      localStorage.setItem("floorId", data.floorId.id);
+
       localStorage.setItem("raw_img", data.imageURL.url);
       localStorage.setItem("projectName", projectName);
+      localStorage.setItem("floornum", floorNum);
 
       toast.success("image uploaded");
       navigate("/editedimg");
 
       setSubmit(true);
-      // localStorage.setItem("floornum", floorNum);
       // localStorage.setItem("description", description);
       // localStorage.setItem("raw_img", data.imageURL.url);
     } catch (error) {

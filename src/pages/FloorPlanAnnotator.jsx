@@ -156,35 +156,34 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
   };
   const id = localStorage.getItem("projectId");
 
-  const sendForAnalysis = async () => {
-    setAnalysisLoading(true);
-    if (imageUrl) {
-      try {
-        const response = await axios.post(
-          `${BACKEND_URL}/api/v1/floorplan/new-floorplan/${id}`,
+  // const sendForAnalysis = async () => {
+  //   setAnalysisLoading(true);
+  //   if (imageUrl) {
+  //     try {
+  //       const response = await axios.post(
+  //         `${BACKEND_URL}/api/v1/floorplan/new-floorplan/${id}`,
 
-          {
-            floorNumber: Number(localStorage.getItem("floornum")),
-            description: localStorage.getItem("description"),
-            // markedImg: localStorage.getItem("marked_img"),
-            // rawImg: localStorage.getItem("raw_img"),
-            // annotatedImg: imageUrl,
-            rooms: rooms,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-        setAnalysisLoading(false);
-        navigate("/profile");
-        alert("Image sent for analysis!");
-      } catch (error) {
-        console.error("Error storing image in localStorage:", error);
-        setAnalysisLoading(false);
-      }
-    }
-  };
-  const formData = new FormData();
+  //         {
+  //           floorNumber: Number(localStorage.getItem("floornum")),
+  //           description: localStorage.getItem("description"),
+  //           // markedImg: localStorage.getItem("marked_img"),
+  //           // rawImg: localStorage.getItem("raw_img"),
+  //           // annotatedImg: imageUrl,
+  //           rooms: rooms,
+  //         },
+  //         {
+  //           withCredentials: true,
+  //         }
+  //       );
+  //       setAnalysisLoading(false);
+  //       navigate("/profile");
+  //       alert("Image sent for analysis!");
+  //     } catch (error) {
+  //       console.error("Error storing image in localStorage:", error);
+  //       setAnalysisLoading(false);
+  //     }
+  //   }
+  // };
 
   const captureAnnotatedImage = async () => {
     const container = containerRef.current;
@@ -215,6 +214,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
 
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: "image/png" });
+        const formData = new FormData();
 
         formData.append("userName", localStorage.getItem("username"));
         formData.append("projectName", localStorage.getItem("projectName"));
@@ -222,6 +222,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
         formData.append("floorNum", localStorage.getItem("floornum"));
         formData.append("type", "annotated");
         formData.append("floorId", localStorage.getItem("floorId"));
+        formData.append("rooms", rooms);
 
         try {
           const response = await axios.post(
@@ -472,12 +473,15 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
           />
         </div>
       </div>
-      <button className="bg-red" onClick={captureAnnotatedImage}>
+      <button
+        className=" w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        onClick={captureAnnotatedImage}
+      >
         Capture
       </button>
-      <button className="bg-red" onClick={sendForAnalysis}>
+      {/* <button className="bg-red" onClick={sendForAnalysis}>
         Send for analysis
-      </button>
+      </button>  */}
     </div>
   );
 }

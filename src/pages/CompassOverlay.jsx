@@ -185,7 +185,7 @@ const CompassOverlay = () => {
                 onClick={handleUpload}
                 className="bg-green-600 hover:bg-green-700 text-white"
               >
-                Submit floor plan
+                Next Step
               </Button>
             )}
           </div>
