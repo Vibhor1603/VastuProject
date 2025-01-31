@@ -50,8 +50,6 @@ function FloorForm() {
   //    }
   //  }, [isAuthenticated, isLoading, navigate]);
 
-  const formData = new FormData();
-
   const username = localStorage.getItem("username");
   const maxFloors = localStorage.getItem("floorcount");
   const projectId = localStorage.getItem("projectId");
@@ -80,17 +78,18 @@ function FloorForm() {
       return;
     }
 
+    const formData = new FormData();
+
     formData.append("image", image);
     formData.append("projectName", projectName);
     formData.append("userName", username);
     formData.append("floorNum", floorNum);
     formData.append("type", "raw");
     formData.append("description", description);
-    formData.append("projectId", projectId);
 
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/api/v1/floorplan/image-upload`,
+        `${BACKEND_URL}/api/v1/floorplan/image-upload/${projectId}`,
 
         formData,
         {
