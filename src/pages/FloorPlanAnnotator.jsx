@@ -4,6 +4,7 @@ import { Slider } from "@/components/ui/slider";
 import html2canvas from "html2canvas";
 import checkAuthStatus from "@/hooks/userSession";
 import { useNavigate } from "react-router-dom";
+import { Oval } from "react-loader-spinner";
 import axios from "axios";
 import {
   Card,
@@ -60,6 +61,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = React.useState(null);
   const [exportedImage, setExportedImage] = useState(null);
+  nst[(loading, setLoa)];
 
   const [roomDetails, setRoomDetails] = useState({
     text: "",
@@ -227,31 +229,36 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
         try {
           const response = await axios.post(
             `${BACKEND_URL}/api/v1/floorplan/image-upload/${id}`,
-            formData
+            formData,
+            {
+              withCredentials: true,
+            }
           );
           const data = await response.data;
 
           // Check and set the returned image URL
           if (data.imageURL && data.imageURL.url) {
             setImageUrl(data.imageURL.url);
-            alert("Image uploaded successfully!");
+            toast.success("Image uploaded successfully!");
             setLoading(false);
           } else {
             console.error("Unexpected response format:", data);
+            toast.error("error uploading the image , try again");
             setLoading(false);
           }
         } catch (error) {
-          console.error("Error uploading the image:", error);
+          toast.error("Error uploading the image");
           setLoading(false);
         }
       } else {
-        console.error("No image available for upload.");
+        toast.error("No image available for upload");
         setLoading(false);
       }
 
       // Convert canvas to blob
     } catch (error) {
       console.error("Error capturing image:", error);
+      setLoading(false);
     }
   };
 
@@ -473,12 +480,29 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
           />
         </div>
       </div>
-      <button
-        className=" w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        onClick={captureAnnotatedImage}
-      >
-        Capture
-      </button>
+      {loading ? (
+        <Oval
+          height={20}
+          width={20}
+          color="#4fa94d"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel="oval-loading"
+          D
+          secondaryColor="#4fa94d"
+          strokeWidth={8}
+          strokeWidthSecondary={2}
+        />
+      ) : (
+        <button
+          className=" w-10 bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          onClick={captureAnnotatedImage}
+        >
+          Capture
+        </button>
+      )}
+
       {/* <button className="bg-red" onClick={sendForAnalysis}>
         Send for analysis
       </button>  */}

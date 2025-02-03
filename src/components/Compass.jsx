@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 const Compass = ({
   imageUrl,
   onNeedleAngleChange = () => {},
+  onCompassAngleChange = () => {},
   compassSize = 400,
 }) => {
   const [compassAngle, setCompassAngle] = useState(0);
@@ -16,7 +17,6 @@ const Compass = ({
 
   const startAngleRef = useRef(0);
   const startMouseAngleRef = useRef(0);
-  const startDragPosRef = useRef({ x: 0, y: 0 });
 
   const degreeMarks = Array.from({ length: 72 }, (_, i) => i * 5);
 
@@ -46,8 +46,16 @@ const Compass = ({
     return (angleDeg + 360) % 360;
   };
 
+  // Returns the needle's true angle relative to north
   const getTrueAngle = (rawAngle) => {
     return (rawAngle - compassAngle + 360) % 360;
+  };
+
+  // When rotating the compass, the indicator doesn't change.
+  // Therefore, the needle's absolute angle is the indicator's angle relative to north:
+  //   trueNeedleAngle = (indicatorAngle - newCompassAngle + 360) % 360
+  const getNewAngle = (newCompassAngle) => {
+    return (indicatorAngle - newCompassAngle + 360) % 360;
   };
 
   const handleCompassMouseDown = (event) => {
@@ -107,13 +115,15 @@ const Compass = ({
     );
 
     let deltaAngle = mouseAngle - startMouseAngleRef.current;
-
     if (deltaAngle > 180) deltaAngle -= 360;
     if (deltaAngle < -180) deltaAngle += 360;
 
     if (isRotatingCompass) {
       const newCompassAngle = (startAngleRef.current + deltaAngle + 360) % 360;
       setCompassAngle(newCompassAngle);
+      const trueAngle = getNewAngle(newCompassAngle);
+      onCompassAngleChange(newCompassAngle);
+      onNeedleAngleChange(trueAngle);
     } else if (isRotatingIndicator) {
       const newIndicatorAngle =
         (startAngleRef.current + deltaAngle + 360) % 360;
@@ -180,6 +190,7 @@ const Compass = ({
             transition: isRotatingCompass ? "none" : "transform 0.1s ease-out",
           }}
         >
+          {/* Render degree marks */}
           {degreeMarks.map((degree) => (
             <div
               key={`degree-${degree}`}
@@ -204,13 +215,13 @@ const Compass = ({
             />
           ))}
 
+          {/* Render numbers at specified degrees */}
           {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(
             (degree) => {
               const radius = compassSize * 0.3125;
               const angleInRad = (degree - 90) * (Math.PI / 180);
               const x = compassSize * 0.375 + radius * Math.cos(angleInRad);
               const y = compassSize * 0.375 + radius * Math.sin(angleInRad);
-
               return (
                 <div
                   key={`num-${degree}`}
@@ -229,12 +240,12 @@ const Compass = ({
             }
           )}
 
+          {/* Render directional labels */}
           {directions.map((dir, idx) => {
             const radius = compassSize * 0.45;
             const angleInRad = (dir.angle - 90) * (Math.PI / 180);
             const x = compassSize * 0.375 + radius * Math.cos(angleInRad);
             const y = compassSize * 0.375 + radius * Math.sin(angleInRad);
-
             return (
               <div
                 key={idx}
@@ -256,6 +267,7 @@ const Compass = ({
             );
           })}
 
+          {/* Render direction lines */}
           {directions.map((dir, idx) => (
             <div
               key={`line-${idx}`}
@@ -281,6 +293,7 @@ const Compass = ({
           ))}
         </div>
 
+        {/* Outer ring */}
         <div
           className="outer-ring absolute"
           style={{
@@ -294,6 +307,7 @@ const Compass = ({
           }}
         />
 
+        {/* Center point */}
         <div
           style={{
             position: "absolute",
@@ -308,6 +322,7 @@ const Compass = ({
           }}
         />
 
+        {/* The indicator (needle) */}
         <div
           ref={indicatorRef}
           className="indicator"
@@ -340,21 +355,8 @@ const Compass = ({
             }}
           />
         </div>
-        <div
-          style={{
-            position: "absolute",
-            top: `${compassSize * 0.8}px`,
-            left: `${compassSize * 0.5}px`,
-            transform: "translateX(-50%)",
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            padding: "4px 8px",
-            borderRadius: "4px",
-            fontSize: `${compassSize * 0.035}px`,
-            fontWeight: "bold",
-          }}
-        >
-          Angle: {Math.round(getTrueAngle(indicatorAngle))}°
-        </div>
+
+        {/* Display the current needle angle */}
       </div>
     </div>
   );

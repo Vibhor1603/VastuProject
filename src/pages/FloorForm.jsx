@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import checkAuthStatus from "@/hooks/userSession";
 import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 
 function FloorForm() {
   const [imageUrl, setImageUrl] = React.useState("");
@@ -25,6 +26,7 @@ function FloorForm() {
   const [submit, setSubmit] = React.useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const { projectName } = useParams();
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     if (!isLoading) {
@@ -68,6 +70,7 @@ function FloorForm() {
 
   const uploadFunction = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (floorNum > maxFloors) {
       toast.error("floor number exceeds the project limit");
       return;
@@ -95,8 +98,10 @@ function FloorForm() {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         }
       );
+      setLoading(false);
       const data = await response.data;
       localStorage.setItem("floorId", data.floorId.id);
 
@@ -113,6 +118,7 @@ function FloorForm() {
     } catch (error) {
       console.error(error);
       toast.error("error uploading image");
+      setLoading(false);
     }
   };
   // const handleFormSubmit = async (e) => {
@@ -177,12 +183,28 @@ function FloorForm() {
               }}
             />
           </div>
-          <button
-            className=" w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={uploadFunction}
-          >
-            Next
-          </button>
+          {loading ? (
+            <Oval
+              height={20}
+              width={20}
+              color="#4fa94d"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="oval-loading"
+              D
+              secondaryColor="#4fa94d"
+              strokeWidth={8}
+              strokeWidthSecondary={2}
+            />
+          ) : (
+            <button
+              className=" w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              onClick={uploadFunction}
+            >
+              Next
+            </button>
+          )}
 
           {/* <Button
             type="submit"

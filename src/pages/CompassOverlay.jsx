@@ -13,6 +13,7 @@ const CompassOverlay = () => {
   const backgroundImage = localStorage.getItem("raw_img");
   const containerRef = useRef(null);
   const [angle, setAngle] = useState(0);
+  const [compassAngle, setCompassAngle] = useState(0);
   const [compassSize, setCompassSize] = useState(400);
   const [exportedImage, setExportedImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState();
@@ -80,18 +81,22 @@ const CompassOverlay = () => {
       formData.append("projectName", localStorage.getItem("projectName"));
       formData.append("image", blob, "capturedImage.png");
       formData.append("floorNum", localStorage.getItem("floornum"));
-      formData.append("type", "marked");
+      formData.append("marked_compass_angle", compassAngle);
+      formData.append("marked_indicator_angle", angle);
       formData.append("floorId", localStorage.getItem("floorId"));
 
       try {
         const response = await axios.post(
           `${BACKEND_URL}/api/v1/floorplan/image-upload/${id}`,
-          formData
+          formData,
+          {
+            withCredentials: true,
+          }
         );
         if (response.status === 200) {
           const data = await response.data;
 
-          alert("Image uploaded successfully!");
+          toast.success("Image uploaded successfully!");
           setLoading(false);
           navigate("/annotate");
         } else {
@@ -139,6 +144,7 @@ const CompassOverlay = () => {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <Compass
                 onNeedleAngleChange={(newAngle) => setAngle(newAngle)}
+                onCompassAngleChange={(newAngle) => setCompassAngle(newAngle)}
                 compassSize={compassSize}
               />
             </div>
@@ -146,7 +152,10 @@ const CompassOverlay = () => {
 
           <div className="flex justify-between items-center">
             <div className="text-lg font-semibold">
-              Current Angle: {Math.round(angle)}°
+              Current Angle: {compassAngle}°
+            </div>
+            <div className="text-lg font-semibold">
+              Entrance Angle: {Math.round(angle)}°
             </div>
             <Button
               onClick={captureImage}

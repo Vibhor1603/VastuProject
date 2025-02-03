@@ -42,7 +42,7 @@ const Login = ({ onClose, success }) => {
       } else {
         // Handle login error
         const data = await response.json();
-        toast.error(data.message);
+        toast.error("Failed to login , please try again");
         setIsloading(false);
         console.log(data);
       }

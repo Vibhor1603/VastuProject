@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Home, Building2, Compass } from "lucide-react";
 import checkAuthStatus from "@/hooks/userSession";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "./ui/alert";
+import { Alert } from "@/components/ui/alert";
+import toast from "react-hot-toast";
 
 function Hero() {
   const { isLoading, isAuthenticated } = checkAuthStatus();
   const navigate = useNavigate();
   function handleclick() {
     if (!isLoading && !isAuthenticated) {
-      alert("login first");
+      toast.error("please login first");
     } else if (!isLoading && isAuthenticated) {
       navigate("/project");
     }
