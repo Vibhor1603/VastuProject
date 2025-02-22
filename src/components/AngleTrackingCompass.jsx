@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 
-const Compass = ({
+const AngleTrackingCompass = ({
   imageUrl,
   onNeedleAngleChange = () => {},
   onCompassAngleChange = () => {},
@@ -8,8 +8,8 @@ const Compass = ({
 }) => {
   const role = localStorage.getItem("ROLE");
   const compass_angle = localStorage.getItem("compass_angle");
-
   const indicator_angle = localStorage.getItem("indicator_angle");
+
   const [compassAngle, setCompassAngle] = useState(
     role === "CONSULTANT" ? Number(compass_angle) : 0
   );
@@ -20,6 +20,12 @@ const Compass = ({
   const [isRotatingCompass, setIsRotatingCompass] = useState(false);
   const [isRotatingIndicator, setIsRotatingIndicator] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [startAngle, setStartAngle] = useState(0);
+  const [endAngle, setEndAngle] = useState(0);
+  const [isNeedleDragging, setIsNeedleDragging] = useState(false);
+  const [dragPath, setDragPath] = useState([]);
+  const [persistentPath, setPersistentPath] = useState([]);
+
   const compassRef = useRef(null);
   const indicatorRef = useRef(null);
   const containerRef = useRef(null);
@@ -53,16 +59,8 @@ const Compass = ({
     return (angleDeg + 360) % 360;
   };
 
-  // Returns the needle's true angle relative to north
-  const getTrueAngle = (rawAngle) => {
-    return (rawAngle - compassAngle + 360) % 360;
-  };
-
-  // When rotating the compass, the indicator doesn't change.
-  // Therefore, the needle's absolute angle is the indicator's angle relative to north:
-  //   trueNeedleAngle = (indicatorAngle - newCompassAngle + 360) % 360
-  const getNewAngle = (newCompassAngle) => {
-    return (indicatorAngle - newCompassAngle + 360) % 360;
+  const getAbsoluteAngle = (relativeAngle) => {
+    return (relativeAngle - compassAngle + 360) % 360;
   };
 
   const handleCompassMouseDown = (event) => {
@@ -101,9 +99,15 @@ const Compass = ({
       centerY
     );
 
+    const absoluteStartAngle = getAbsoluteAngle(indicatorAngle);
     startAngleRef.current = indicatorAngle;
     startMouseAngleRef.current = mouseAngle;
     setIsRotatingIndicator(true);
+    setIsNeedleDragging(true);
+    setStartAngle(absoluteStartAngle);
+    setEndAngle(absoluteStartAngle);
+    setPersistentPath([]); // Clear previous path
+    setDragPath([{ angle: absoluteStartAngle, time: Date.now() }]);
   };
 
   const handleMouseMove = (event) => {
@@ -128,19 +132,27 @@ const Compass = ({
     if (isRotatingCompass) {
       const newCompassAngle = (startAngleRef.current + deltaAngle + 360) % 360;
       setCompassAngle(newCompassAngle);
-      const trueAngle = getNewAngle(newCompassAngle);
       onCompassAngleChange(newCompassAngle);
-      onNeedleAngleChange(trueAngle);
     } else if (isRotatingIndicator) {
       const newIndicatorAngle =
         (startAngleRef.current + deltaAngle + 360) % 360;
       setIndicatorAngle(newIndicatorAngle);
-      const trueAngle = getTrueAngle(newIndicatorAngle);
-      onNeedleAngleChange(trueAngle);
+      const absoluteAngle = getAbsoluteAngle(newIndicatorAngle);
+      setEndAngle(absoluteAngle);
+      setDragPath((prev) => [
+        ...prev,
+        { angle: absoluteAngle, time: Date.now() },
+      ]);
+      onNeedleAngleChange(absoluteAngle);
     }
   };
 
   const handleMouseUp = () => {
+    if (isRotatingIndicator) {
+      setIsNeedleDragging(false);
+      setPersistentPath(dragPath); // Save the current path as persistent
+      setDragPath([]); // Clear active drag path
+    }
     setIsRotatingCompass(false);
     setIsRotatingIndicator(false);
     setIsDragging(false);
@@ -166,6 +178,49 @@ const Compass = ({
     };
   }, [isRotatingCompass, isRotatingIndicator]);
 
+  const renderDragPath = () => {
+    const radius = compassSize * 0.35;
+    const center = compassSize * 0.5;
+
+    const generatePath = (points) => {
+      return points
+        .map(({ angle }) => {
+          const angleRad = (angle - 90) * (Math.PI / 180);
+          const x = center + radius * Math.cos(angleRad);
+          const y = center + radius * Math.sin(angleRad);
+          return `${x},${y}`;
+        })
+        .join(" L ");
+    };
+
+    return (
+      <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        {/* Draw filled area for the sweep */}
+        {(persistentPath.length > 0 || dragPath.length > 0) && (
+          <path
+            d={`M ${center},${center} L ${generatePath(
+              persistentPath.length > 0 ? persistentPath : dragPath
+            )} L ${center},${center} Z`}
+            fill="rgba(255, 0, 0, 0.1)"
+            stroke="none"
+          />
+        )}
+
+        {/* Draw the path line */}
+        {(persistentPath.length > 0 || dragPath.length > 0) && (
+          <path
+            d={`M ${generatePath(
+              persistentPath.length > 0 ? persistentPath : dragPath
+            )}`}
+            stroke="rgba(255, 0, 0, 0.4)"
+            strokeWidth={compassSize * 0.005}
+            fill="none"
+          />
+        )}
+      </svg>
+    );
+  };
+
   return (
     <div
       ref={containerRef}
@@ -185,6 +240,8 @@ const Compass = ({
         }}
         onMouseDown={handleCompassMouseDown}
       >
+        {renderDragPath()}
+
         <div
           className="inner-ring absolute"
           style={{
@@ -197,7 +254,6 @@ const Compass = ({
             transition: isRotatingCompass ? "none" : "transform 0.1s ease-out",
           }}
         >
-          {/* Render degree marks */}
           {degreeMarks.map((degree) => (
             <div
               key={`degree-${degree}`}
@@ -222,7 +278,6 @@ const Compass = ({
             />
           ))}
 
-          {/* Render numbers at specified degrees */}
           {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(
             (degree) => {
               const radius = compassSize * 0.3125;
@@ -247,7 +302,6 @@ const Compass = ({
             }
           )}
 
-          {/* Render directional labels */}
           {directions.map((dir, idx) => {
             const radius = compassSize * 0.45;
             const angleInRad = (dir.angle - 90) * (Math.PI / 180);
@@ -274,7 +328,6 @@ const Compass = ({
             );
           })}
 
-          {/* Render direction lines */}
           {directions.map((dir, idx) => (
             <div
               key={`line-${idx}`}
@@ -300,7 +353,6 @@ const Compass = ({
           ))}
         </div>
 
-        {/* Outer ring */}
         <div
           className="outer-ring absolute"
           style={{
@@ -314,7 +366,6 @@ const Compass = ({
           }}
         />
 
-        {/* Center point */}
         <div
           style={{
             position: "absolute",
@@ -322,14 +373,13 @@ const Compass = ({
             left: `${compassSize * 0.5}px`,
             width: `${compassSize * 0.025}px`,
             height: `${compassSize * 0.025}px`,
-            backgroundColor: "red",
+            backgroundColor: "black",
             borderRadius: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "none",
           }}
         />
 
-        {/* The indicator (needle) */}
         <div
           ref={indicatorRef}
           className="indicator"
@@ -337,16 +387,19 @@ const Compass = ({
             position: "absolute",
             top: `${compassSize * 0.5}px`,
             left: `${compassSize * 0.5}px`,
-            width: `${compassSize * 0.01}px`,
+            width: `${
+              isNeedleDragging ? compassSize * 0.02 : compassSize * 0.01
+            }px`,
             height: `${compassSize * 0.35}px`,
-            backgroundColor: "red",
+            backgroundColor: isNeedleDragging ? "#ff4444" : "red",
             transformOrigin: "center bottom",
             transform: `translate(-50%, -100%) rotate(${indicatorAngle}deg)`,
-            transition: isRotatingIndicator
-              ? "none"
-              : "transform 0.1s ease-out",
+            transition: isRotatingIndicator ? "none" : "all 0.1s ease-out",
             cursor: "grab",
             pointerEvents: "auto",
+            boxShadow: isNeedleDragging
+              ? "0 0 12px rgba(255,0,0,0.6), 0 0 20px rgba(255,0,0,0.4)"
+              : "0 0 4px rgba(255,0,0,0.3)",
           }}
           onMouseDown={handleIndicatorMouseDown}
         >
@@ -358,15 +411,28 @@ const Compass = ({
               transform: "translate(-50%, -50%) rotate(45deg)",
               width: `${compassSize * 0.03}px`,
               height: `${compassSize * 0.03}px`,
-              backgroundColor: "red",
+              backgroundColor: isNeedleDragging ? "#ff4444" : "red",
+              boxShadow: isNeedleDragging
+                ? "0 0 12px rgba(255,0,0,0.6)"
+                : "0 0 4px rgba(255,0,0,0.3)",
+              transition: "all 0.1s ease-out",
             }}
           />
         </div>
+      </div>
 
-        {/* Display the current needle angle */}
+      <div className="mt-4 text-lg font-medium bg-gray-100 p-2 rounded-lg shadow-sm">
+        <span className="text-blue-600">{Math.round(startAngle)}°</span>
+        {" → "}
+        <span className="text-green-600">{Math.round(endAngle)}°</span>
+        {" ("}
+        <span className="text-purple-600">
+          {Math.round((endAngle - startAngle + 360) % 360)}°
+        </span>
+        {")"}
       </div>
     </div>
   );
 };
 
-export default Compass;
+export default AngleTrackingCompass;

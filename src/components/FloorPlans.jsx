@@ -24,8 +24,8 @@ const FloorPlans = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [activeImageType, setActiveImageType] = useState(null);
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading } = checkAuthStatus();
-  const selectedProjectID = localStorage.getItem("selectedProjectID");
+  const { isAuthenticated, isLoading, userRole } = checkAuthStatus();
+  const selectedProjectID = localStorage.getItem("projectId");
   const role = localStorage.getItem("ROLE"); // Fetch role from localStorage
 
   useEffect(() => {
@@ -58,6 +58,13 @@ const FloorPlans = () => {
       markedImg: plan.marked_img,
       annotatedImg: plan.annotated_img,
     });
+    if (role === "CONSULTANT") {
+      localStorage.setItem("raw_img", plan.raw_img);
+      localStorage.setItem("compass_angle", plan.marked_compass_angle);
+      localStorage.setItem("indicator_angle", plan.marked_indicator_angle);
+      localStorage.setItem("floornum", plan.floornumber);
+      localStorage.setItem("floorId", plan.id);
+    }
     setCurrentPlan(plan);
     setActiveImageType("raw");
   };
@@ -71,7 +78,7 @@ const FloorPlans = () => {
     setActiveImageType(null);
   };
 
-  const reviewClick = async () => {
+  const reviewClick = async (type) => {
     if (role === "CONSULTANT") {
       try {
         await axios.put(
@@ -80,7 +87,8 @@ const FloorPlans = () => {
           { withCredentials: true }
         );
         toast.success("Review started successfully!");
-        navigate(`/reports/${currentPlan.id}`); // Navigate to /reports
+
+        type === "marked" ? navigate(`/editedimg`) : navigate(`/annotate`); // Navigate to /reports
         closeImageModal(); // Close modal after action
       } catch (error) {
         toast.error("Server error, please try again later");
@@ -143,10 +151,20 @@ const FloorPlans = () => {
           {role === "CONSULTANT" ? (
             <div className="p-4 bg-orange-50 text-center">
               <button
-                onClick={reviewClick}
+                onClick={() => {
+                  reviewClick("marked");
+                }}
+                className="px-6 py-2 m-2 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-all"
+              >
+                Edit markings
+              </button>
+              <button
+                onClick={() => {
+                  reviewClick("annotated");
+                }}
                 className="px-6 py-2 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-all"
               >
-                Start Review
+                Edit annotations
               </button>
             </div>
           ) : (
@@ -199,9 +217,9 @@ const FloorPlans = () => {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {floorPlans.map((plan) => (
+              {floorPlans.map((plan, index) => (
                 <div
-                  key={plan._id}
+                  key={index}
                   onClick={() => handleFloorPlanClick(plan)}
                   className="bg-orange-50 border border-orange-200 rounded-lg p-4 hover:bg-orange-100 cursor-pointer transition-all group shadow-md hover:shadow-lg"
                 >

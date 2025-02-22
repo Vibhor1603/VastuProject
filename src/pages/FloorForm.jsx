@@ -113,8 +113,6 @@ function FloorForm() {
       navigate("/editedimg");
 
       setSubmit(true);
-      // localStorage.setItem("description", description);
-      // localStorage.setItem("raw_img", data.imageURL.url);
     } catch (error) {
       console.error(error);
       toast.error("error uploading image");

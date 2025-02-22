@@ -11,9 +11,17 @@ import toast from "react-hot-toast";
 
 const CompassOverlay = () => {
   const backgroundImage = localStorage.getItem("raw_img");
+  const role = localStorage.getItem("ROLE");
+  const oldCompassAngle = localStorage.getItem("compass_angle");
+  const oldIndicatorAngle = localStorage.getItem("indicator_angle");
+
   const containerRef = useRef(null);
-  const [angle, setAngle] = useState(0);
-  const [compassAngle, setCompassAngle] = useState(0);
+  const [angle, setAngle] = useState(
+    role === "CONSULTANT" ? Number(oldIndicatorAngle) : 0
+  );
+  const [compassAngle, setCompassAngle] = useState(
+    role === "CONSULTANT" ? Number(oldCompassAngle) : 0
+  );
   const [compassSize, setCompassSize] = useState(400);
   const [exportedImage, setExportedImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState();
@@ -22,6 +30,7 @@ const CompassOverlay = () => {
   const [loading, setLoading] = useState(false);
   const [Analysisloading, setAnalysisLoading] = useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,17 +38,12 @@ const CompassOverlay = () => {
       if (!isAuthenticated) {
         toast.error("not authenticated");
         navigate("/");
-      } else if (isAuthenticated && userRole === "CONSULTANT") {
-        console.log(userRole);
-        toast.error("not authenticated");
-        navigate("/");
-        console.log(isAuthenticated);
       } else if (!localStorage.getItem("projectName")) {
         toast.error("create a project first");
         navigate("/");
       }
     }
-  }, [isLoading, isAuthenticated, navigate, userRole]);
+  }, [isLoading, isAuthenticated, navigate]);
 
   const captureImage = async () => {
     if (containerRef.current) {
@@ -84,6 +88,7 @@ const CompassOverlay = () => {
       formData.append("marked_compass_angle", compassAngle);
       formData.append("marked_indicator_angle", angle);
       formData.append("floorId", localStorage.getItem("floorId"));
+      formData.append("type", "marked");
 
       try {
         const response = await axios.post(

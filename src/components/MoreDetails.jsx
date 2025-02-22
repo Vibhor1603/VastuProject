@@ -30,7 +30,8 @@ function MoreDetails({ selectedProject, onClose }) {
   };
 
   const dispFloorPlan = () => {
-    localStorage.setItem("selectedProjectID", selectedProject.id);
+    localStorage.setItem("projectId", selectedProject.id);
+    localStorage.setItem("projectName", selectedProject.name);
     navigate("/floorplans");
   };
 

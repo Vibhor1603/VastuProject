@@ -16,6 +16,7 @@ import FloorPlanAnnotator from "@/pages/FloorPlanAnnotator";
 import Report from "@/pages/Report";
 import ViewReport from "@/pages/ViewReport";
 import NotFound from "./NotFound";
+import CompassOverlay from "./CompassOverlay";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/floorForm/:projectName" element={<FloorForm />} />
         <Route path="/reports/:plan" element={<Report />} />
         <Route path="/viewreport/:plan" element={<ViewReport />} />
+        <Route path="/compassOverlay" element={<CompassOverlay />} />
       </Routes>
       <Footer />
     </Router>

@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Trash2, Save, MapPin } from "lucide-react";
-import Compass from "../components/Compass";
+import AngleTrackingCompass from "../components/AngleTrackingCompass";
 import toast from "react-hot-toast";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -55,13 +55,13 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState(null);
   const [compassAngle, setCompassAngle] = useState(0);
+  const [needleAngle, setNeedleAngle] = useState(0);
   const [selectedRoomIndex, setSelectedRoomIndex] = useState(null);
   const [northOrientation, setNorthOrientation] = useState(0);
   const { isLoading, isAuthenticated, userRole } = checkAuthStatus();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = React.useState(null);
   const [exportedImage, setExportedImage] = useState(null);
-  nst[(loading, setLoa)];
 
   const [roomDetails, setRoomDetails] = useState({
     text: "",
@@ -77,21 +77,42 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
       if (!isAuthenticated) {
         toast.error("not authenticated");
         navigate("/");
-      } else if (isAuthenticated && userRole === "CONSULTANT") {
-        console.log(userRole);
-        toast.error("not authenticated");
-        navigate("/");
-        console.log(isAuthenticated);
       } else if (!localStorage.getItem("projectName")) {
         toast.error("create a project first");
         navigate("/");
       }
     }
-  }, [isLoading, isAuthenticated, navigate, userRole]);
+  }, [isLoading, isAuthenticated, navigate]);
 
   useEffect(() => {
     onRoomsChange?.(rooms);
   }, [rooms, onRoomsChange]);
+
+  const fetchAnnotations = async () => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/api/v1/floorplan/getannotations/${localStorage.getItem(
+          "floorId"
+        )}`
+      );
+      console.log("Fetched Annotations:", response.data.annotations);
+      return response.data.annotations.annotations;
+    } catch (error) {
+      console.error("Error fetching annotations:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    if (userRole === "CONSULTANT") {
+      const fetchAndSetAnnotations = async () => {
+        const annot = await fetchAnnotations();
+        setRooms(annot);
+      };
+
+      fetchAndSetAnnotations();
+    }
+  }, [userRole]);
 
   const calculateRelativeCoordinates = (event) => {
     const container = containerRef.current;
@@ -158,35 +179,6 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
   };
   const id = localStorage.getItem("projectId");
 
-  // const sendForAnalysis = async () => {
-  //   setAnalysisLoading(true);
-  //   if (imageUrl) {
-  //     try {
-  //       const response = await axios.post(
-  //         `${BACKEND_URL}/api/v1/floorplan/new-floorplan/${id}`,
-
-  //         {
-  //           floorNumber: Number(localStorage.getItem("floornum")),
-  //           description: localStorage.getItem("description"),
-  //           // markedImg: localStorage.getItem("marked_img"),
-  //           // rawImg: localStorage.getItem("raw_img"),
-  //           // annotatedImg: imageUrl,
-  //           rooms: rooms,
-  //         },
-  //         {
-  //           withCredentials: true,
-  //         }
-  //       );
-  //       setAnalysisLoading(false);
-  //       navigate("/profile");
-  //       alert("Image sent for analysis!");
-  //     } catch (error) {
-  //       console.error("Error storing image in localStorage:", error);
-  //       setAnalysisLoading(false);
-  //     }
-  //   }
-  // };
-
   const captureAnnotatedImage = async () => {
     const container = containerRef.current;
     if (!container) return;
@@ -224,7 +216,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
         formData.append("floorNum", localStorage.getItem("floornum"));
         formData.append("type", "annotated");
         formData.append("floorId", localStorage.getItem("floorId"));
-        formData.append("rooms", rooms);
+        formData.append("rooms", JSON.stringify(rooms));
 
         try {
           const response = await axios.post(
@@ -235,17 +227,10 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
             }
           );
           const data = await response.data;
-
-          // Check and set the returned image URL
-          if (data.imageURL && data.imageURL.url) {
-            setImageUrl(data.imageURL.url);
-            toast.success("Image uploaded successfully!");
-            setLoading(false);
-          } else {
-            console.error("Unexpected response format:", data);
-            toast.error("error uploading the image , try again");
-            setLoading(false);
-          }
+          toast.success("Image uploaded successfully!");
+          console.log(rooms);
+          setLoading(false);
+          navigate("/profile");
         } catch (error) {
           toast.error("Error uploading the image");
           setLoading(false);
@@ -456,10 +441,11 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
 
       {/* Compass Section with Size Slider */}
       <div className=" absolute top-20 left-20 p-4 z-10 w-64 flex flex-col items-center">
-        <Compass
-          onNeedleAngleChange={(angle) => setCompassAngle(angle)}
+        <AngleTrackingCompass
+          onNeedleAngleChange={(angle) => setNeedleAngle(angle)}
+          onCompassAngleChange={(angle) => setCompassAngle(angle)}
           imageUrl={raw_img}
-          compassSize={compassSize} // Dynamic compass size
+          compassSize={compassSize}
         />
         <div className="mt-2 text-1xl text-gray-600 text-center">
           mark the entrance
@@ -496,7 +482,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
         />
       ) : (
         <button
-          className=" w-10 bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className=" w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           onClick={captureAnnotatedImage}
         >
           Capture
