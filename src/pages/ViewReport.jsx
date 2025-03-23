@@ -1,204 +1,174 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  PDFDownloadLink,
-} from "@react-pdf/renderer";
+import { Download, Info, ChevronDown, ChevronUp, Compass } from "lucide-react";
 import toast from "react-hot-toast";
-import { FileDown, Loader2 } from "lucide-react";
+import checkAuthStatus from "@/hooks/userSession";
 
-function ViewReport() {
-  const { plan } = useParams();
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-  const [floorreport, setReport] = useState([]);
+const ViewReport = () => {
+  const { planID } = useParams();
+  const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [expandedRooms, setExpandedRooms] = useState({});
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const { isAuthenticated, isLoading, userRole } = checkAuthStatus();
 
   useEffect(() => {
-    const fetchReport = async () => {
-      setLoading(true);
+    console.log(planID);
+    const fetchReportData = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
-          `${BACKEND_URL}/api/v1/floorplan/report/getreport/${plan}`,
+          `${BACKEND_URL}/api/v1/floorplan/getfloor/${planID}`,
           {
             credentials: "include",
           }
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
-        setReport(data.report.reports);
-        setLoading(false);
+        console.log(data);
+        if (data.report) {
+          setReports(data.report);
+        }
       } catch (error) {
-        toast.error("Error fetching report");
-        console.error("Error fetching report:", error);
+        console.error("Error fetching report data:", error);
+        setError("Failed to load report data. Please try again later.");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchReport();
-  }, [plan]);
+    fetchReportData();
+  }, [planID, BACKEND_URL]);
+
+  const toggleRoomExpansion = (roomName) => {
+    setExpandedRooms((prev) => ({
+      ...prev,
+      [roomName]: !prev[roomName],
+    }));
+  };
+
+  const getDirectionColor = (direction) => {
+    const directionColors = {
+      North: "bg-blue-100 text-blue-800",
+      South: "bg-red-100 text-red-800",
+      East: "bg-purple-100 text-purple-800",
+      West: "bg-yellow-100 text-yellow-800",
+      Northeast: "bg-indigo-100 text-indigo-800",
+      Northwest: "bg-cyan-100 text-cyan-800",
+      Southeast: "bg-pink-100 text-pink-800",
+      Southwest: "bg-amber-100 text-amber-800",
+      Center: "bg-green-100 text-green-800",
+    };
+
+    return directionColors[direction] || "bg-gray-100 text-gray-800";
+  };
+
+  if (loading) {
+    return (
+      <div className="mt-10 p-6 max-w-4xl mx-auto text-center">
+        <div className="animate-pulse h-6 bg-orange-100 rounded w-3/4 mx-auto mb-4"></div>
+        <div className="animate-pulse h-32 bg-orange-50 rounded mb-4"></div>
+        <div className="animate-pulse h-32 bg-orange-50 rounded mb-4"></div>
+        <div className="animate-pulse h-32 bg-orange-50 rounded"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mt-10 p-6 max-w-4xl mx-auto bg-red-50 border border-red-200 rounded-lg">
+        <h2 className="text-xl font-bold text-red-700 mb-2">Error</h2>
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="bg-orange-500 text-white p-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Floor Plan Report</h1>
-          {!loading && floorreport.length > 0 && (
-            <PDFDownloadLink
-              document={<ReportPDF reports={floorreport} />}
-              fileName="floor_plan_report.pdf"
-              className="flex items-center space-x-2 bg-white text-orange-500 px-4 py-2 rounded-md hover:bg-gray-100 transition"
-            >
-              {({ loading }) => (
-                <>
-                  {loading ? (
-                    <Loader2 className="animate-spin" size={20} />
-                  ) : (
-                    <FileDown size={20} />
-                  )}
-                  <span>{loading ? "Preparing PDF..." : "Download PDF"}</span>
-                </>
-              )}
-            </PDFDownloadLink>
-          )}
+    <div className="mt-10 p-6 max-w-4xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-orange-700">Vastu Report</h1>
+      </div>
+
+      {/* Attach ref to the outermost container */}
+      <div className="p-6 bg-gradient-to-r from-orange-50 to-orange-100 shadow-lg rounded-2xl">
+        <div className="mb-8 text-center print:mb-6">
+          <h2 className="text-2xl font-bold text-orange-800 mb-2 print:text-3xl">
+            Vastu Analysis Report
+          </h2>
+          <p className="text-orange-600">
+            Generated on {new Date().toLocaleDateString()}
+          </p>
         </div>
 
-        <div className="p-6">
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <Loader2 className="animate-spin text-orange-500" size={48} />
-            </div>
-          ) : floorreport.length === 0 ? (
-            <div className="text-center text-gray-500">
-              No reports available for this floor plan.
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {floorreport.map((report, index) => (
+        {reports && (
+          <div className="space-y-6 print:space-y-4">
+            {reports.map((report, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-md overflow-hidden border border-orange-200"
+              >
                 <div
-                  key={index}
-                  className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg"
+                  className="p-4 bg-orange-200 flex justify-between items-center cursor-pointer"
+                  onClick={() => toggleRoomExpansion(report.room)}
                 >
-                  <h2 className="text-lg font-semibold text-orange-700 mb-2">
-                    Room: {report.roomname}
-                  </h2>
-                  <div className="space-y-2">
-                    <p>
-                      <span className="font-medium text-orange-600">
-                        Remark:
-                      </span>{" "}
-                      {report.remark}
-                    </p>
-                    <p>
-                      <span className="font-medium text-orange-600">
-                        Remedy:
-                      </span>{" "}
-                      {report.remedy}
-                    </p>
+                  <div className="flex items-center">
+                    <h3 className="text-lg font-bold text-orange-800">
+                      {report.room}
+                    </h3>
+                    <span
+                      className={`ml-3 py-1 px-3 rounded-full text-xs font-medium ${getDirectionColor(
+                        report.direction
+                      )}`}
+                    >
+                      <span className="flex items-center">
+                        <Compass size={14} className="mr-1" />
+                        {report.direction}
+                      </span>
+                    </span>
                   </div>
+                  {expandedRooms[report.room] ? (
+                    <ChevronUp className="text-orange-800" />
+                  ) : (
+                    <ChevronDown className="text-orange-800" />
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
+
+                {/* Remove the `|| true` condition */}
+                {expandedRooms[report.room] && (
+                  <div className="p-4 space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-orange-700 mb-2 flex items-center">
+                        <Info size={18} className="mr-2 text-orange-500" />{" "}
+                        Impact
+                      </h4>
+                      <p className="text-gray-700 pl-6">{report.impact}</p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-orange-700 mb-2">
+                        Remedy
+                      </h4>
+                      <p className="text-gray-700 pl-6">{report.remedy}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-8 border-t border-orange-200 pt-4 text-center text-sm text-orange-600 print:mt-12">
+          <p>This report is provided for informational purposes only.</p>
+          <p>© {new Date().getFullYear()} Vastu Consultation Services</p>
         </div>
       </div>
     </div>
   );
-}
-
-// PDF Component
-const ReportPDF = ({ reports }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.header}>
-        <Text style={styles.titleText}>Floor Plan Inspection Report</Text>
-      </View>
-      {reports.map((report, index) => (
-        <View key={index} style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.roomTitle}>Room: {report.roomname}</Text>
-          </View>
-          <View style={styles.sectionContent}>
-            <Text style={styles.label}>Remark:</Text>
-            <Text style={styles.content}>{report.remark}</Text>
-            <Text style={styles.label}>Remedy:</Text>
-            <Text style={styles.content}>{report.remedy}</Text>
-          </View>
-        </View>
-      ))}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          Generated on {new Date().toLocaleDateString()}
-        </Text>
-      </View>
-    </Page>
-  </Document>
-);
-
-const styles = StyleSheet.create({
-  page: {
-    padding: 30,
-    fontFamily: "Helvetica",
-    backgroundColor: "#FFF5E6",
-  },
-  header: {
-    backgroundColor: "#FF8C00",
-    padding: 15,
-    marginBottom: 20,
-    borderRadius: 5,
-  },
-  titleText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  section: {
-    marginBottom: 15,
-    backgroundColor: "white",
-    borderRadius: 8,
-    overflow: "hidden",
-    boxShadow: "0 2 5 rgba(0,0,0,0.1)",
-  },
-  sectionHeader: {
-    backgroundColor: "#FFA500",
-    padding: 10,
-  },
-  roomTitle: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-  sectionContent: {
-    padding: 12,
-  },
-  label: {
-    color: "#FF6347",
-    fontSize: 12,
-    marginBottom: 5,
-    fontWeight: "bold",
-  },
-  content: {
-    fontSize: 11,
-    marginBottom: 10,
-    color: "#333",
-  },
-  footer: {
-    position: "absolute",
-    bottom: 20,
-    left: 30,
-    right: 30,
-    borderTopWidth: 1,
-    borderTopColor: "#FF8C00",
-    paddingTop: 10,
-  },
-  footerText: {
-    fontSize: 8,
-    color: "#888",
-    textAlign: "center",
-  },
-});
+};
 
 export default ViewReport;

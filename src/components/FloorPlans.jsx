@@ -21,6 +21,7 @@ const FloorPlans = () => {
     markedImg: null,
     annotatedImg: null,
   });
+  const [reportGenerated, setReportGenerated] = useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [activeImageType, setActiveImageType] = useState(null);
   const navigate = useNavigate();
@@ -52,11 +53,28 @@ const FloorPlans = () => {
     fetchFloorPlans();
   }, [isAuthenticated, isLoading, navigate, selectedProjectID]);
 
+  const generateReport = async () => {
+    try {
+      const data = await axios.post(
+        `${BACKEND_URL}/api/v1/report/${currentPlan.id}`,
+        null, // No body required
+        { withCredentials: true } // Send cookies along with the request
+      );
+      if (data.status === 200) {
+        toast.success("Report generated successfully!");
+        setReportGenerated(true);
+      }
+    } catch (error) {
+      toast.error("Failed to generate report");
+      console.error(error);
+    }
+  };
+
   const handleFloorPlanClick = (plan) => {
     setSelectedImages({
       rawImg: plan.raw_img,
-      markedImg: plan.marked_img,
-      annotatedImg: plan.annotated_img,
+      markedImg: plan.user_marked_img,
+      annotatedImg: plan.user_annotated_img,
     });
     if (role === "CONSULTANT") {
       localStorage.setItem("raw_img", plan.raw_img);
@@ -165,6 +183,12 @@ const FloorPlans = () => {
                 className="px-6 py-2 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-all"
               >
                 Edit annotations
+              </button>
+              <button
+                onClick={generateReport}
+                className="px-6 py-2 bg-orange-600 ml-2 text-white font-bold rounded-lg hover:bg-orange-700 transition-all"
+              >
+                Generate Report
               </button>
             </div>
           ) : (

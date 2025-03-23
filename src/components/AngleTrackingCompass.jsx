@@ -4,6 +4,7 @@ const AngleTrackingCompass = ({
   imageUrl,
   onNeedleAngleChange = () => {},
   onCompassAngleChange = () => {},
+  onRangeChange = () => {},
   compassSize = 400,
 }) => {
   const role = localStorage.getItem("ROLE");
@@ -106,7 +107,7 @@ const AngleTrackingCompass = ({
     setIsNeedleDragging(true);
     setStartAngle(absoluteStartAngle);
     setEndAngle(absoluteStartAngle);
-    setPersistentPath([]); // Clear previous path
+    setPersistentPath([]);
     setDragPath([{ angle: absoluteStartAngle, time: Date.now() }]);
   };
 
@@ -150,8 +151,15 @@ const AngleTrackingCompass = ({
   const handleMouseUp = () => {
     if (isRotatingIndicator) {
       setIsNeedleDragging(false);
-      setPersistentPath(dragPath); // Save the current path as persistent
-      setDragPath([]); // Clear active drag path
+      setPersistentPath(dragPath);
+      setDragPath([]);
+
+      // Pass range values to the parent component
+      onRangeChange({
+        startAngle,
+        endAngle,
+        angleDifference: (endAngle - startAngle + 360) % 360,
+      });
     }
     setIsRotatingCompass(false);
     setIsRotatingIndicator(false);
@@ -195,7 +203,6 @@ const AngleTrackingCompass = ({
 
     return (
       <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        {/* Draw filled area for the sweep */}
         {(persistentPath.length > 0 || dragPath.length > 0) && (
           <path
             d={`M ${center},${center} L ${generatePath(
@@ -205,8 +212,6 @@ const AngleTrackingCompass = ({
             stroke="none"
           />
         )}
-
-        {/* Draw the path line */}
         {(persistentPath.length > 0 || dragPath.length > 0) && (
           <path
             d={`M ${generatePath(

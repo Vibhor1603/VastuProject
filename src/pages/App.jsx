@@ -34,8 +34,8 @@ function App() {
         <Route path="/floorplans" element={<FloorPlans />} />
         <Route path="/annotate" element={<FloorPlanAnnotator />} />
         <Route path="/floorForm/:projectName" element={<FloorForm />} />
-        <Route path="/reports/:plan" element={<Report />} />
-        <Route path="/viewreport/:plan" element={<ViewReport />} />
+
+        <Route path="/viewreport/:planID" element={<ViewReport />} />
         <Route path="/compassOverlay" element={<CompassOverlay />} />
       </Routes>
       <Footer />

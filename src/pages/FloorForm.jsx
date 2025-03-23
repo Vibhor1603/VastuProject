@@ -73,10 +73,12 @@ function FloorForm() {
     setLoading(true);
     if (floorNum > maxFloors) {
       toast.error("floor number exceeds the project limit");
+      setLoading(false);
       return;
     }
     if (!floorNum || floorNum <= 0) {
       toast.error("Floor number is not entered correctly!");
+      setLoading(false);
       return;
     }
 

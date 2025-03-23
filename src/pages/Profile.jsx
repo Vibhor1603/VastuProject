@@ -47,6 +47,7 @@ function Profile() {
   }, []);
 
   function handlenewProject() {
+    // Make sure you're navigating to the correct path
     navigate("/project");
   }
 
@@ -90,17 +91,20 @@ function Profile() {
             <button
               onClick={handlenewProject}
               className="
-      flex items-center space-x-2
-      bg-gradient-to-r from-orange-600 to-amber-600 
-      text-white 
-      px-6 py-2 
-      rounded-lg 
-      font-semibold 
-      hover:from-orange-700 hover:to-amber-700 
-      transition-all duration-300 
-      shadow-md hover:shadow-lg 
-      transform hover:-translate-y-0.5
-    "
+                flex items-center justify-center 
+                bg-gradient-to-r from-orange-600 to-amber-600 
+                text-white 
+                px-6 py-2 
+                rounded-lg 
+                font-semibold 
+                hover:from-orange-700 hover:to-amber-700 
+                transition-all duration-300 
+                shadow-md hover:shadow-lg 
+                transform hover:-translate-y-0.5
+                mr-auto
+                ml-60
+              "
+              aria-label="Create New Project"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -114,6 +118,7 @@ function Profile() {
                   clipRule="evenodd"
                 />
               </svg>
+              <span>New Project</span>
             </button>
           )}
         </div>
@@ -121,7 +126,7 @@ function Profile() {
         {projects.length !== 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
             {projects &&
-              projects.map((item, index) => {
+              projects.map((item) => {
                 return (
                   <ProjectCard
                     onClick={() => {
@@ -134,7 +139,41 @@ function Profile() {
               })}
           </div>
         ) : (
-          "ille"
+          <div className="flex flex-col items-center justify-center p-8 mt-8">
+            <div className="text-gray-800 text-lg font-medium mb-4">
+              No projects found
+            </div>
+            {localStorage.getItem("ROLE") === "USER" && (
+              <button
+                onClick={handlenewProject}
+                className="
+                  flex items-center space-x-2
+                  bg-gradient-to-r from-orange-600 to-amber-600 
+                  text-white 
+                  px-6 py-3
+                  rounded-lg 
+                  font-semibold 
+                  hover:from-orange-700 hover:to-amber-700 
+                  transition-all duration-300 
+                  shadow-md hover:shadow-lg 
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>Create Your First Project</span>
+              </button>
+            )}
+          </div>
         )}
       </div>
       {selectedProject && (
