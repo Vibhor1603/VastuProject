@@ -85,7 +85,7 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
   const [activeTab, setActiveTab] = useState("draw");
   const [viewMode, setViewMode] = useState("edit");
   const [zoom, setZoom] = useState(100);
-
+  const [assets, setAssets] = useState([]);
   const navigate = useNavigate();
   const raw_img = localStorage.getItem("raw_img");
 
@@ -148,6 +148,15 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
       fetchAndSetAnnotations();
     }
   }, [userRole]);
+
+  useEffect(() => {
+    const fetchAssetNames = async () => {
+      const assets = await axios.get(`${BACKEND_URL}/api/v1/assets`);
+      console.log("Fetched Asset Names:", assets.data);
+      setAssets(assets.data);
+    };
+    fetchAssetNames();
+  }, []);
 
   const calculateRoomAngle = (roomAngle) => {
     // Adjust room angle based on north orientation
@@ -600,11 +609,13 @@ export default function FloorPlanAnnotator({ onRoomsChange }) {
                           <option value="" disabled>
                             Enter room name
                           </option>
-                          <option value="bedroom">bedroom</option>
-                          <option value="poojaghar">pooja ghar</option>
-                          <option value="kitchen">kitchen</option>
-                          <option value="dining">dining</option>
-                          <option value="toilet">toilet</option>
+                          {assets.map((asset) => {
+                            return (
+                              <option key={asset} value={asset}>
+                                {asset}
+                              </option>
+                            );
+                          })}
                         </select>
                       </div>
                       <div>

@@ -55,14 +55,20 @@ const FloorPlans = () => {
 
   const generateReport = async () => {
     try {
-      const data = await axios.post(
-        `${BACKEND_URL}/api/v1/report/${currentPlan.id}`,
+      const response = await axios.post(
+        `${BACKEND_URL}/api/v1/report/genreport/${currentPlan.id}`,
         null, // No body required
         { withCredentials: true } // Send cookies along with the request
       );
-      if (data.status === 200) {
+
+      if (response.status === 200) {
         toast.success("Report generated successfully!");
         setReportGenerated(true);
+
+        // Navigate to the edit report page with the report data
+        navigate(`/edit-report/${currentPlan.id}`, {
+          state: { reportData: response.data },
+        });
       }
     } catch (error) {
       toast.error("Failed to generate report");
