@@ -272,6 +272,29 @@ const FloorPlans = () => {
                   <p className="text-orange-600 line-clamp-2 mb-4">
                     {plan.description || "No description"}
                   </p>
+
+                  {/* Status indicator */}
+                  <div className="mb-3">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        plan.status === " COMPLETED"
+                          ? "bg-green-100 text-green-800"
+                          : plan.status === "NEW"
+                          ? "bg-blue-100 text-blue-800"
+                          : plan.status === "SUBMITTED"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : plan.status === "REVIEWING"
+                          ? "bg-purple-100 text-purple-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {plan.status
+                        ? plan.status.charAt(0).toUpperCase() +
+                          plan.status.slice(1).toLowerCase()
+                        : "No status"}
+                    </span>
+                  </div>
+
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-orange-500 group-hover:text-orange-700 transition-colors">
                       View Details
