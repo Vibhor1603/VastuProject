@@ -40,50 +40,52 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="py-8 sm:py-12 lg:py-20 bg-gradient-to-b from-violet-50 to-orange-50">
+    <section className="py-24 bg-neutral-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-orange-600 to-violet-600 text-transparent bg-clip-text">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-neutral-900">
             Client Testimonials
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto px-4">
+          <p className="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
             Hear what our clients have to say about their Vastu consultation
             experience
           </p>
         </div>
 
         {/* Testimonials Container */}
-        <div className="relative">
+        <div className="relative max-w-7xl mx-auto">
           {/* Scrollable Container */}
-          <div className="flex overflow-x-auto gap-2 sm:gap-4 lg:gap-3 pb-2 sm:pb-4 snap-x snap-mandatory">
+          <div className="flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory scrollbar-hide">
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="flex-none w-[180px] sm:w-[220px] lg:w-[360px] snap-center"
+                className="flex-none w-80 snap-center"
               >
-                <div className="h-full bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-2 sm:p-4 lg:p-4">
-                  <div className="flex flex-col items-center">
-                    <Quote className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-orange-400 mb-4 sm:mb-6" />
+                <div className="h-full bg-white rounded-2xl shadow-soft hover:shadow-medium transition-all duration-300 p-8">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="p-3 bg-primary-100 rounded-xl mb-6">
+                      <Quote className="w-8 h-8 text-primary-600" />
+                    </div>
                     <img
                       src={testimonial.image}
                       alt={testimonial.name}
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mb-4 sm:mb-6 object-cover border-4 border-orange-100"
+                      className="w-16 h-16 rounded-full mb-6 object-cover border-4 border-neutral-100"
                     />
-                    <p className="text-gray-600 text-sm sm:text-base lg:text-lg text-center mb-2 sm:mb-4 italic">
-                      {testimonial.text}
+                    <p className="text-neutral-600 text-lg text-center mb-6 italic leading-relaxed">
+                      "{testimonial.text}"
                     </p>
-                    <div className="flex mb-3 sm:mb-4">
+                    <div className="flex mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star
                           key={i}
-                          className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 fill-current"
+                          className="w-5 h-5 text-accent-400 fill-current"
                         />
                       ))}
                     </div>
-                    <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">
+                    <h4 className="text-xl font-bold text-neutral-900 mb-2">
                       {testimonial.name}
                     </h4>
-                    <p className="text-sm sm:text-base text-gray-600">
+                    <p className="text-neutral-500">
                       {testimonial.role}
                     </p>
                   </div>

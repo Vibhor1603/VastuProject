@@ -4,73 +4,86 @@ import { Compass, Home, Briefcase, Globe } from "lucide-react";
 
 const About = () => {
   return (
-    <section className="container mx-auto px-4 py-20 bg-gradient-to-b from-white via-orange-100 to-orange-500">
-      <div className="flex flex-col items-center text-center space-y-6 mb-12">
-        <Compass className="w-16 h-16 text-orange-500 animate-spin-slow" />
-        <h2 className="text-lg md:text-5xl font-bold text-gray-900">
-          About Us
-        </h2>
-        <p className="text-lg md:text-xl text-gray-700 max-w-xl">
-          We bring harmony to your living and working spaces using timeless
-          Vastu Shastra principles and modern design.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Residential Vastu */}
-        <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <img
-            src="/image-1.jpg"
-            alt="Residential Vastu"
-            className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-orange via-transparent to-transparent opacity-40"></div>
-          <div className="p-4 relative z-10">
-            <Home className="w-10 h-10 text-black-500 mb-4" />
-            <h3 className="text-xl font-semibold text-black mb-2">
-              Residential Vastu
-            </h3>
-            <b className="text-gray-700 text-sm">
-              Turn your home into a sanctuary of peace and prosperity.
-            </b>
+    <section className="py-24 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center text-center space-y-8 mb-16">
+          <div className="p-4 bg-primary-100 rounded-2xl">
+            <Compass className="w-12 h-12 text-primary-600" />
           </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-neutral-900">
+            About Us
+          </h2>
+          <p className="text-xl text-neutral-600 max-w-2xl leading-relaxed">
+            We bring harmony to your living and working spaces using timeless
+            Vastu Shastra principles and modern design.
+          </p>
         </div>
 
-        {/* Commercial Vastu */}
-        <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <img
-            src="/commercial.jpg"
-            alt="Commercial Vastu"
-            className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-orange via-transparent to-transparent opacity-40"></div>
-          <div className="p-4 relative z-10">
-            <Briefcase className="w-10 h-10 text-orange-600 mb-4" />
-            <h3 className="text-xl font-semibold text-black mb-2">
-              Commercial Vastu
-            </h3>
-            <b className="text-gray-700 text-sm">
-              Create a balanced workspace that fosters growth and success.
-            </b>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Residential Vastu */}
+          <div className="group relative rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-all duration-500 bg-white">
+            <div className="aspect-[4/3] overflow-hidden">
+              <img
+                src="/image-1.jpg"
+                alt="Residential Vastu"
+                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div className="p-6">
+              <div className="p-3 bg-secondary-100 rounded-xl w-fit mb-4">
+                <Home className="w-6 h-6 text-secondary-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-neutral-900 mb-3">
+                Residential Vastu
+              </h3>
+              <p className="text-neutral-600 leading-relaxed">
+                Turn your home into a sanctuary of peace and prosperity.
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Online Consultation */}
-        <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <img
-            src="/image-2.jpg"
-            alt="Online Consultation"
-            className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-orange via-transparent to-transparent opacity-40"></div>
-          <div className="p-4 relative z-10">
-            <Globe className="w-10 h-10 text-orange-600 mb-4" />
-            <h3 className="text-xl font-semibold text-black mb-2">
-              Online Consultation
-            </h3>
-            <b className="text-gray-700 text-sm">
-              Get expert advice, anytime and anywhere.
-            </b>
+          {/* Commercial Vastu */}
+          <div className="group relative rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-all duration-500 bg-white">
+            <div className="aspect-[4/3] overflow-hidden">
+              <img
+                src="/commercial.jpg"
+                alt="Commercial Vastu"
+                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div className="p-6">
+              <div className="p-3 bg-accent-100 rounded-xl w-fit mb-4">
+                <Briefcase className="w-6 h-6 text-accent-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-neutral-900 mb-3">
+                Commercial Vastu
+              </h3>
+              <p className="text-neutral-600 leading-relaxed">
+                Create a balanced workspace that fosters growth and success.
+              </p>
+            </div>
+          </div>
+
+          {/* Online Consultation */}
+          <div className="group relative rounded-2xl overflow-hidden shadow-soft hover:shadow-medium transition-all duration-500 bg-white md:col-span-2 lg:col-span-1">
+            <div className="aspect-[4/3] overflow-hidden">
+              <img
+                src="/image-2.jpg"
+                alt="Online Consultation"
+                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div className="p-6">
+              <div className="p-3 bg-success-100 rounded-xl w-fit mb-4">
+                <Globe className="w-6 h-6 text-success-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-neutral-900 mb-3">
+                Online Consultation
+              </h3>
+              <p className="text-neutral-600 leading-relaxed">
+                Get expert advice, anytime and anywhere.
+              </p>
+            </div>
           </div>
         </div>
       </div>

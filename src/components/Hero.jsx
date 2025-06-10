@@ -18,43 +18,59 @@ function Hero() {
     }
   }
   return (
-    <div className="relative min-h-[600px] w-full bg-gradient-to-b from-white via-orange-100 to-orange-500">
+    <div className="relative min-h-[90vh] w-full bg-gradient-to-b from-neutral-50 to-white">
       <div className="container mx-auto px-4 py-20">
-        <div className="flex flex-col items-center justify-center text-center space-y-8">
+        <div className="flex flex-col items-center justify-center text-center space-y-12 max-w-4xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Compass className="w-8 h-8 text-orange-600" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
-            Transform Your Space with Vastu Shastra
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-700 max-w-2xl">
-            Harmonize your home and workspace with authentic Vastu principles.
-            Get personalized consultations to create balanced, prosperous, and
-            positive environments.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full my-8">
-            <div className="flex flex-col items-center space-y-2">
-              <Home className="w-8 h-8 text-orange-600" />
-              <p className="font-medium">Residential Vastu</p>
-            </div>
-            <div className="flex flex-col items-center space-y-2">
-              <Building2 className="w-8 h-8 text-orange-600" />
-              <p className="font-medium">Commercial Vastu</p>
-            </div>
-            <div className="flex flex-col items-center space-y-2">
-              <Compass className="w-8 h-8 text-orange-600" />
-              <p className="font-medium">Online Consultation</p>
+            <div className="p-3 bg-primary-100 rounded-xl">
+              <Compass className="w-8 h-8 text-primary-600" />
             </div>
           </div>
-          <Button
-            className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-6 text-lg rounded-lg shadow-lg transition-all duration-300"
-            onClick={handleclick}
-          >
-            Book Your Vastu Consultation
-          </Button>
-          <p className="text-sm text-gray-600">
-            Expert Vastu consultation from certified professionals
-          </p>
+          
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-7xl font-bold text-neutral-900 leading-tight">
+              Transform Your Space with{" "}
+              <span className="text-primary-600">Vastu Shastra</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-neutral-600 max-w-3xl leading-relaxed">
+              Harmonize your home and workspace with authentic Vastu principles.
+              Get personalized consultations to create balanced, prosperous, and
+              positive environments.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl w-full my-12">
+            <div className="flex flex-col items-center space-y-4 p-6 bg-white rounded-2xl shadow-soft hover:shadow-medium transition-all duration-300">
+              <div className="p-4 bg-secondary-100 rounded-xl">
+                <Home className="w-8 h-8 text-secondary-600" />
+              </div>
+              <p className="font-semibold text-neutral-800">Residential Vastu</p>
+            </div>
+            <div className="flex flex-col items-center space-y-4 p-6 bg-white rounded-2xl shadow-soft hover:shadow-medium transition-all duration-300">
+              <div className="p-4 bg-accent-100 rounded-xl">
+                <Building2 className="w-8 h-8 text-accent-600" />
+              </div>
+              <p className="font-semibold text-neutral-800">Commercial Vastu</p>
+            </div>
+            <div className="flex flex-col items-center space-y-4 p-6 bg-white rounded-2xl shadow-soft hover:shadow-medium transition-all duration-300">
+              <div className="p-4 bg-success-100 rounded-xl">
+                <Compass className="w-8 h-8 text-success-600" />
+              </div>
+              <p className="font-semibold text-neutral-800">Online Consultation</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <Button
+              className="bg-neutral-900 hover:bg-neutral-800 text-white px-8 py-6 text-lg rounded-xl shadow-medium hover:shadow-strong transition-all duration-300 transform hover:-translate-y-1"
+              onClick={handleclick}
+            >
+              Book Your Vastu Consultation
+            </Button>
+            <p className="text-sm text-neutral-500">
+              Expert Vastu consultation from certified professionals
+            </p>
+          </div>
         </div>
       </div>
     </div>
