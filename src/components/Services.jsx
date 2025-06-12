@@ -86,7 +86,7 @@ const Services = () => {
   ];
 
   return (
-    <section className="relative w-full px-6 py-24 bg-gradient-to-b from-neutral-50 to-white">
+    <section className="relative w-full px-6 py-24 bg-gradient-to-b from-neutral-50 via-orange-100 to-orange-200">
       {/* Background decoration */}
       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-px h-24 bg-gradient-to-b from-neutral-200 to-transparent"></div>
 

@@ -67,7 +67,7 @@ const Steps = () => {
   };
 
   return (
-    <section className="py-8 sm:py-12 lg:py-12 bg-gradient-to-br from-neutral-50 via-white to-primary-50/30">
+    <section className="py-8 sm:py-12 lg:py-12 bg-gradient-to-b from-neutral-50 via-orange-100 to-orange-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16 lg:mb-20">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-2xl mb-6">

@@ -84,16 +84,16 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <NavLink to="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-transparent bg-clip-text hover:from-orange-700 hover:to-amber-700 transition-all duration-300">
+            <span className="text-2xl font-bold text-primary-600 hover:text-primary-600 transition-colors duration-300">
               VastuGuide
             </span>
           </NavLink>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-8">
             <NavLink
               to="/"
-              className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
+              className="text-primary-600 transition-colors duration-200 text-lg font-medium hover:font-semibold"
             >
               Home
             </NavLink>
@@ -101,7 +101,7 @@ export default function Navbar() {
             {isLoggedIn && localStorage.getItem("ROLE") === "USER" ? (
               <NavLink
                 to="/project"
-                className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
+                className="text-primary-600 transition-colors duration-200 text-lg font-medium hover:font-semibold"
               >
                 Create a Project
               </NavLink>
@@ -112,7 +112,7 @@ export default function Navbar() {
             {isLoggedIn ? (
               <NavLink
                 to="/profile"
-                className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
+                className="text-primary-600 transition-colors duration-200 text-lg font-medium hover:font-semibold"
               >
                 Profile
               </NavLink>
@@ -122,16 +122,16 @@ export default function Navbar() {
 
             <NavLink
               to="/contact"
-              className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
+              className="text-primary-600 transition-colors duration-200 text-lg font-medium hover:font-semibold"
             >
               Contact
             </NavLink>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               {isLoggedIn ? (
                 <button
                   onClick={handleLogout}
-                  className="bg-gradient-to-r from-orange-600 to-amber-600 text-white px-6 py-2.5 rounded-full font-semibold hover:from-orange-700 hover:to-amber-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  className="bg-primary-700 text-white px-6 py-2 rounded-lg font-medium hover:bg-neutral-800 transition-all duration-300 shadow-soft hover:shadow-medium"
                 >
                   Logout
                 </button>
@@ -139,7 +139,7 @@ export default function Navbar() {
                 <>
                   <button
                     onClick={() => setOpenLogin(true)}
-                    className="bg-white text-gray-700 border border-amber-200 px-6 py-2.5 rounded-full font-semibold hover:bg-orange-50 hover:border-amber-300 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                    className="text-neutral-700 border border-primary-600 px-6 py-2 rounded-lg font-medium hover:shadow-medium hover:bg-primary-700  hover:text-white transition-all duration-300"
                   >
                     Login
                   </button>
@@ -147,7 +147,7 @@ export default function Navbar() {
                     onClick={() => {
                       setOpenSignUp(true);
                     }}
-                    className="bg-gradient-to-r from-orange-600 to-amber-600 text-white px-6 py-2.5 rounded-full font-semibold hover:from-orange-700 hover:to-amber-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                    className="bg-primary-700 text-white px-6 py-2 rounded-lg font-medium hover:bg-neutral-800 transition-all duration-300 shadow-soft hover:shadow-medium"
                   >
                     Sign Up
                   </button>
@@ -159,7 +159,7 @@ export default function Navbar() {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-gray-700 hover:text-orange-600 transition-colors duration-200 focus:outline-none"
+            className="md:hidden text-neutral-700 hover:text-neutral-900 transition-colors duration-200 focus:outline-none"
           >
             <svg
               className="w-6 h-6"
@@ -180,10 +180,10 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden py-4 space-y-3 bg-white rounded-lg shadow-lg mt-2 border border-amber-100">
+          <div className="md:hidden py-4 space-y-3 bg-white rounded-xl shadow-medium mt-2 border border-neutral-200">
             <NavLink
               to="/"
-              className="block text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200 font-medium px-4 py-2"
+              className="block text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors duration-200 font-medium px-4 py-2"
             >
               Home
             </NavLink>
@@ -198,7 +198,7 @@ export default function Navbar() {
             {isLoggedIn ? (
               <NavLink
                 to="/profile"
-                className="block text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200 font-medium px-4 py-2"
+                className="block text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors duration-200 font-medium px-4 py-2"
               >
                 Profile
               </NavLink>
@@ -208,14 +208,14 @@ export default function Navbar() {
 
             <NavLink
               to="/contact"
-              className="block text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200 font-medium px-4 py-2"
+              className="block text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors duration-200 font-medium px-4 py-2"
             >
               Contact
             </NavLink>
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
-                className="w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white px-6 py-2.5 rounded-full font-semibold hover:from-orange-700 hover:to-amber-700 transition-all duration-300 shadow-md mx-4"
+                className="w-full bg-neutral-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-neutral-800 transition-all duration-300 shadow-soft mx-4"
               >
                 Logout
               </button>
@@ -223,7 +223,7 @@ export default function Navbar() {
               <div className="px-4 space-y-2">
                 <button
                   onClick={() => setOpenLogin(true)}
-                  className="w-full bg-white text-gray-700 border border-amber-200 px-6 py-2.5 rounded-full font-semibold hover:bg-orange-50 hover:border-amber-300 transition-all duration-300 shadow-sm"
+                  className="w-full text-neutral-700 border border-neutral-300 px-6 py-2 rounded-lg font-medium hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-300"
                 >
                   Login
                 </button>
@@ -231,7 +231,7 @@ export default function Navbar() {
                   onClick={() => {
                     setOpenSignUp(true);
                   }}
-                  className="w-full bg-gradient-to-r from-orange-600 to-amber-600 text-white px-6 py-2.5 rounded-full font-semibold hover:from-orange-700 hover:to-amber-700 transition-all duration-300 shadow-md"
+                  className="w-full bg-neutral-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-neutral-800 transition-all duration-300 shadow-soft"
                 >
                   Sign Up
                 </button>

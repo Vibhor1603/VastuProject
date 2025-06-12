@@ -96,7 +96,7 @@ const VastuImportance = () => {
   };
 
   return (
-    <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-neutral-50 via-white to-primary-50/30">
+    <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-neutral-50 via-orange-100 to-orange-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center mb-8 sm:mb-12">
