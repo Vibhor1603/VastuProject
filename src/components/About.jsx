@@ -1,77 +1,111 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Compass, Home, Briefcase, Globe } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Home,
+  Building2,
+  Compass,
+  Briefcase,
+  Globe,
+  ArrowRight,
+} from "lucide-react";
 
 const About = () => {
+  const services = [
+    {
+      icon: Home,
+      title: "Residential Vastu",
+      description:
+        "Transform your home into a sanctuary of peace and prosperity with personalized solutions.",
+      image: "/image-1.jpg",
+      color: "from-primary-50 to-primary-100",
+    },
+    {
+      icon: Briefcase,
+      title: "Commercial Vastu",
+      description:
+        "Create balanced workspaces that foster growth, success, and positive energy flow.",
+      image: "/commercial.jpg",
+      color: "from-secondary-50 to-secondary-100",
+    },
+    {
+      icon: Globe,
+      title: "Online Consultation",
+      description:
+        "Get expert Vastu guidance anytime, anywhere with our comprehensive digital consultations.",
+      image: "/image-2.jpg",
+      color: "from-accent-50 to-accent-100",
+    },
+  ];
+
   return (
-    <section className="container mx-auto px-4 py-20 bg-gradient-to-b from-white via-orange-100 to-orange-500">
-      <div className="flex flex-col items-center text-center space-y-6 mb-12">
-        <Compass className="w-16 h-16 text-orange-500 animate-spin-slow" />
-        <h2 className="text-lg md:text-5xl font-bold text-gray-900">
-          About Us
-        </h2>
-        <p className="text-lg md:text-xl text-gray-700 max-w-xl">
-          We bring harmony to your living and working spaces using timeless
-          Vastu Shastra principles and modern design.
-        </p>
-      </div>
+    <section className="relative w-full px-6 py-24 bg-gradient-to-b from-white to-neutral-50">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-px h-24 bg-gradient-to-b from-transparent to-neutral-200"></div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Residential Vastu */}
-        <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <img
-            src="/image-1.jpg"
-            alt="Residential Vastu"
-            className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-orange via-transparent to-transparent opacity-40"></div>
-          <div className="p-4 relative z-10">
-            <Home className="w-10 h-10 text-black-500 mb-4" />
-            <h3 className="text-xl font-semibold text-black mb-2">
-              Residential Vastu
-            </h3>
-            <b className="text-gray-700 text-sm">
-              Turn your home into a sanctuary of peace and prosperity.
-            </b>
+      <div className="container mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="text-center space-y-6 mb-20">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-soft border border-neutral-200/50">
+            <Compass className="w-8 h-8 text-primary-600" />
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-4xl md:text-6xl font-bold text-neutral-900 tracking-tight">
+              About Us
+            </h2>
+            <p className="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+              We bring harmony to your living and working spaces using timeless
+              Vastu Shastra principles and modern design expertise.
+            </p>
           </div>
         </div>
 
-        {/* Commercial Vastu */}
-        <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <img
-            src="/commercial.jpg"
-            alt="Commercial Vastu"
-            className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-orange via-transparent to-transparent opacity-40"></div>
-          <div className="p-4 relative z-10">
-            <Briefcase className="w-10 h-10 text-orange-600 mb-4" />
-            <h3 className="text-xl font-semibold text-black mb-2">
-              Commercial Vastu
-            </h3>
-            <b className="text-gray-700 text-sm">
-              Create a balanced workspace that fosters growth and success.
-            </b>
-          </div>
-        </div>
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="group relative bg-white rounded-3xl overflow-hidden shadow-soft hover:shadow-medium transition-all duration-500 hover:-translate-y-2 border border-neutral-200/50"
+            >
+              {/* Image Container */}
+              <div className="relative h-64 overflow-hidden">
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t ${service.color} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}
+                ></div>
 
-        {/* Online Consultation */}
-        <div className="group relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-t from-orange-200 via-orange-300 to-orange-500 hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <img
-            src="/image-2.jpg"
-            alt="Online Consultation"
-            className="object-cover w-full h-48 group-hover:opacity-80 transition-opacity duration-300"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-orange via-transparent to-transparent opacity-40"></div>
-          <div className="p-4 relative z-10">
-            <Globe className="w-10 h-10 text-orange-600 mb-4" />
-            <h3 className="text-xl font-semibold text-black mb-2">
-              Online Consultation
-            </h3>
-            <b className="text-gray-700 text-sm">
-              Get expert advice, anytime and anywhere.
-            </b>
-          </div>
+                {/* Icon Overlay */}
+                <div className="absolute top-6 left-6">
+                  <div className="w-12 h-12 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-soft">
+                    <service.icon className="w-6 h-6 text-primary-600" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-8 space-y-4">
+                <h3 className="text-2xl font-bold text-neutral-900 group-hover:text-primary-600 transition-colors duration-300">
+                  {service.title}
+                </h3>
+                <p className="text-neutral-600 leading-relaxed">
+                  {service.description}
+                </p>
+
+                {/* Learn More Link */}
+                <div className="pt-4">
+                  <div className="inline-flex items-center gap-2 text-primary-600 font-semibold group-hover:gap-3 transition-all duration-300 cursor-pointer">
+                    <span>Learn More</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

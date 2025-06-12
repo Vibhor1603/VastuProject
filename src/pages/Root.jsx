@@ -5,13 +5,14 @@ import Services from "../components/Services";
 import Steps from "../components/Steps";
 import Testimonials from "../components/Testimonials";
 import About from "../components/About";
+import VastuImportance from "@/components/VastuImportance";
 
 function Root() {
   return (
     <div>
       <Hero />
       <About />
-
+      <VastuImportance />
       <Services />
       <Steps />
       <Testimonials />

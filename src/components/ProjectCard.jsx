@@ -14,7 +14,7 @@ export default function ProjectCard({ project, onClick }) {
   return (
     <Card
       onClick={onClick}
-      className="w-full h-full transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200"
+      className="w-full h-full transition-all duration-200 hover:shadow-lg hover:scale-90 cursor-pointer bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200"
     >
       <CardContent className="p-2 sm:p-4">
         {/* Header Section */}

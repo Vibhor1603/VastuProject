@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   X,
-  Building,
+  Building2,
   MapPin,
   Layers,
   Home,
   Calendar,
   Trash2,
+  FileText,
+  Upload,
 } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -37,25 +39,12 @@ function MoreDetails({ selectedProject, onClose }) {
 
   const createFloorPlan = () => {
     localStorage.setItem("projectId", selectedProject.id);
-
     localStorage.setItem("floorcount", selectedProject.numFloors);
     navigate(`/floorForm/${selectedProject.name}`);
   };
 
-  const reviewClick = async () => {
-    try {
-      await axios.put(
-        `${BACKEND_URL}/api/v1/project/select-review/${selectedProject.id}`,
-        null,
-        { withCredentials: true }
-      );
-      onClose();
-    } catch (error) {
-      toast.error("Server error, please try again later");
-      console.error(error);
-      navigate("/profile");
-      onClose();
-    }
+  const handleViewReport = () => {
+    navigate(`/viewreport/${selectedProject.id}`);
   };
 
   const handleDeleteProject = async () => {
@@ -78,55 +67,55 @@ function MoreDetails({ selectedProject, onClose }) {
       navigate("/profile");
     } catch (error) {
       toast.error("Failed to delete project");
-      console.error(error);
+      console.error("Delete error:", error);
     } finally {
       setIsDeleting(false);
     }
   };
 
   const DetailRow = ({ icon: Icon, label, value }) => (
-    <div className="space-y-1.5">
-      <label className="text-sm font-medium text-orange-800 flex items-center gap-2">
-        <Icon size={16} />
-        {label}
-      </label>
-      <div className="bg-white/60 border border-orange-200 rounded-lg py-2.5 px-3 text-gray-700">
-        {value}
+    <div className="flex items-center gap-4 py-3 group hover:bg-primary-50/50 rounded-md transition-all duration-200">
+      <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center group-hover:bg-primary-200 transition-colors duration-200">
+        <Icon className="size-5 text-primary-600" />
+      </div>
+      <div className="flex-1">
+        <p className="text-sm font-medium text-neutral-600">{label}</p>
+        <p className="text-base text-neutral-900">{value}</p>
       </div>
     </div>
   );
 
   return (
     <div
-      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-fade-up"
       onClick={onClose}
     >
       <div
-        className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-orange-200 relative"
+        className="w-full max-w-lg bg-primary-50 backdrop-blur-sm rounded-2xl shadow-strong border border-primary-100/30 overflow-hidden animate-scale-in"
         onClick={handleContentClick}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-orange-900">
-            Project Details
-          </h3>
+        <div className="p-6 bg-gradient-to-br from-primary-50 to-neutral-50 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-primary-200/50 rounded-xl flex items-center justify-center">
+              <Home className="size-6 text-primary-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-neutral-900 truncate max-w-[300px]">
+              {selectedProject.name}
+            </h3>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-orange-200 rounded-full transition-colors"
+            className="p-2 rounded-full hover:bg-primary-100 transition-colors duration-200 hover:scale-110"
           >
-            <X size={24} className="text-orange-700" />
+            <X className="size-5 text-neutral-700" />
           </button>
         </div>
 
-        {/* Content Grid */}
-        <div className="space-y-4">
+        {/* Content */}
+        <div className="p-6 space-y-2">
           <DetailRow
-            icon={Home}
-            label="Project Name"
-            value={selectedProject.name}
-          />
-          <DetailRow
-            icon={Building}
+            icon={Building2}
             label="Property Type"
             value={selectedProject.type}
           />
@@ -152,40 +141,79 @@ function MoreDetails({ selectedProject, onClose }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-6 pt-4 border-t border-orange-200 grid grid-cols-2 gap-3">
+        <div className="p-6 pt-0 space-y-2 border-t border-neutral-100/50">
           <button
             onClick={dispFloorPlan}
-            className="px-4 py-2 rounded-lg  bg-red-100 hover:bg-red-200 text-red-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1"
+            className="
+              w-full flex items-center justify-center gap-3 px-6 py-3
+              bg-primary-50 hover:bg-primary-100 text-primary-700 font-medium
+              rounded-xl transition-all duration-300
+              hover:shadow-medium hover:scale-[1.02]
+              focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+              group
+            "
             type="button"
           >
+            <FileText className="size-5 group-hover:scale-110 transition-transform duration-200" />
             View Floor Plans
           </button>
 
-          {localStorage.getItem("ROLE") === "USER" ? (
+          {localStorage.getItem("ROLE") === "USER" && (
             <button
               onClick={createFloorPlan}
-              className="px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-700  font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1"
+              className="
+                w-full flex items-center justify-center gap-3 px-6 py-3
+                bg-primary-600 hover:bg-primary-700 text-white font-medium
+                rounded-xl transition-all duration-300
+                hover:shadow-medium hover:scale-[1.02]
+                focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                group
+              "
               type="button"
             >
+              <Upload className="size-5 group-hover:scale-110 transition-transform duration-200" />
               Upload Floor Plan
             </button>
-          ) : null}
-        </div>
+          )}
 
-        {/* Delete Button */}
-        {localStorage.getItem("ROLE") === "USER" && (
-          <div className="mt-4 pt-4 border-t border-orange-200 flex justify-center">
+          {localStorage.getItem("ROLE") === "USER" && (
+            <button
+              onClick={handleViewReport}
+              className="
+                w-full flex items-center justify-center gap-3 px-6 py-3
+                bg-accent-50 hover:bg-accent-100 text-accent-700 font-medium
+                rounded-xl transition-all duration-300
+                hover:shadow-medium hover:scale-[1.02]
+                focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2
+                group
+              "
+              type="button"
+            >
+              <FileText className="size-5 group-hover:scale-110 transition-transform duration-200" />
+              View Report
+            </button>
+          )}
+
+          {localStorage.getItem("ROLE") === "USER" && (
             <button
               onClick={handleDeleteProject}
               disabled={isDeleting}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="
+                w-full flex items-center justify-center gap-3 px-6 py-3
+                bg-destructive-50 hover:bg-destructive-100 text-destructive-700 font-medium
+                rounded-xl transition-all duration-300
+                hover:shadow-medium hover:scale-[1.02]
+                focus:outline-none focus:ring-2 focus:ring-destructive-500 focus:ring-offset-2
+                disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100
+                group
+              "
               type="button"
             >
-              <Trash2 size={16} />
+              <Trash2 className="size-5 group-hover:scale-110 transition-transform duration-200" />
               {isDeleting ? "Deleting..." : "Delete Project"}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

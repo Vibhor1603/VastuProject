@@ -1,24 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import {
-  Mail,
-  Phone,
-  MessageSquare,
-  SendHorizontal,
-  Heart,
-} from "lucide-react";
+import { Mail, Phone, MessageSquare, SendHorizontal } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ContactPage = () => {
   const navigate = useNavigate();
@@ -44,121 +28,131 @@ const ContactPage = () => {
         body: JSON.stringify(formData),
       });
 
-      // if (response.ok) {
-      //   console.log("feedback submitted");
-      //   navigate("/");
-      // } else {
-      //   console.log("feedback error");
-      // }
+      if (response.ok) {
+        toast.success("Feedback submitted successfully!");
+        navigate("/");
+      } else {
+        toast.error("Failed to submit feedback");
+      }
     } catch (error) {
-      console.log(error);
+      toast.error("Error submitting feedback");
+      console.error(error);
     }
     setFormData({ email: "", mobile: "", feedback: "" });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-violet-50 to-orange-100 p-2 sm:p-6 md:p-2 flex items-center justify-center">
-      <Card className="w-full max-w-lg shadow-xl border-orange-100 bg-white/90 backdrop-blur">
-        <CardHeader className="text-center space-y-2 pb-8 pt-6">
-          <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-violet-500 rounded-full mx-auto flex items-center justify-center mb-2 shadow-lg">
-            <Heart className="w-10 h-10 text-white animate-pulse" />
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-primary-50 py-6 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+      <div className="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-2xl shadow-medium border border-primary-100/30 animate-fade-in">
+        {/* Header */}
+        <div className="p-6 sm:p-8 text-center space-y-3 border-b border-neutral-100/50">
+          <div className="w-12 h-12 bg-primary-100 rounded-xl mx-auto flex items-center justify-center">
+            <MessageSquare className="size-6 text-primary-600" />
           </div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-violet-600 bg-clip-text text-transparent">
-            We would Love to Hear From You
-          </CardTitle>
-          <CardDescription className="text-lg text-orange-600 font-medium">
-            Your feedback shapes our journey
-          </CardDescription>
-        </CardHeader>
+          <h1 className="text-xl sm:text-2xl font-semibold text-neutral-900">
+            We Value Your Feedback
+          </h1>
+          <p className="text-sm text-neutral-600">
+            Share your thoughts to help us improve.
+          </p>
+        </div>
 
-        <CardContent className="space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label
-                htmlFor="email"
-                className="text-sm font-medium flex items-center gap-2 text-orange-700"
-              >
-                <Mail className="w-4 h-4 text-orange-500" />
-                Email Address
-              </Label>
-              <div className="relative group">
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email address"
-                  required
-                  className="border-orange-200 focus:border-orange-500 focus:ring-orange-500 transition-colors bg-orange-50/50 pl-4"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label
-                htmlFor="mobile"
-                className="text-sm font-medium flex items-center gap-2 text-orange-700"
-              >
-                <Phone className="w-4 h-4 text-orange-500" />
-                Mobile Number
-              </Label>
-              <div className="relative group">
-                <Input
-                  type="tel"
-                  id="mobile"
-                  name="mobile"
-                  value={formData.mobile}
-                  onChange={handleChange}
-                  placeholder="Enter your mobile number"
-                  required
-                  className="border-orange-200 focus:border-orange-500 focus:ring-orange-500 transition-colors bg-orange-50/50 pl-4"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label
-                htmlFor="feedback"
-                className="text-sm font-medium flex items-center gap-2 text-orange-700"
-              >
-                <MessageSquare className="w-4 h-4 text-orange-500" />
-                Your Feedback
-              </Label>
-              <div className="relative group">
-                <Textarea
-                  id="feedback"
-                  name="feedback"
-                  value={formData.feedback}
-                  onChange={handleChange}
-                  placeholder="We value every word you share..."
-                  required
-                  className="min-h-[120px] border-orange-200 focus:border-orange-500 focus:ring-orange-500 transition-colors bg-orange-50/50 pl-4 resize-none"
-                />
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-gradient-to-r from-orange-400 to-violet-500 hover:from-orange-500 hover:to-violet-600 text-white py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
+          <div className="space-y-2">
+            <label
+              htmlFor="email"
+              className="flex items-center gap-2 text-sm font-medium text-neutral-700"
             >
-              <span className="text-lg">Send Feedback</span>
-              <SendHorizontal className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </form>
-
-          <div className="pt-4 text-center space-y-2">
-            <div className="flex items-center justify-center gap-1 text-orange-500">
-              <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-orange-300"></div>
-              <Heart className="w-4 h-4" />
-              <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-orange-300"></div>
-            </div>
-            <p className="text-sm text-orange-600 md-8">
-              Thank you for helping us grow better!
-            </p>
+              <Mail className="size-4 text-primary-600" />
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              required
+              className="
+                w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl
+                focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
+                text-sm text-neutral-900 placeholder-neutral-500
+                transition-all duration-200
+              "
+            />
           </div>
-        </CardContent>
-      </Card>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="mobile"
+              className="flex items-center gap-2 text-sm font-medium text-neutral-700"
+            >
+              <Phone className="size-4 text-primary-600" />
+              Mobile Number
+            </label>
+            <input
+              type="tel"
+              id="mobile"
+              name="mobile"
+              value={formData.mobile}
+              onChange={handleChange}
+              placeholder="Enter your mobile number"
+              required
+              className="
+                w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl
+                focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
+                text-sm text-neutral-900 placeholder-neutral-500
+                transition-all duration-200
+              "
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="feedback"
+              className="flex items-center gap-2 text-sm font-medium text-neutral-700"
+            >
+              <MessageSquare className="size-4 text-primary-600" />
+              Your Feedback
+            </label>
+            <textarea
+              id="feedback"
+              name="feedback"
+              value={formData.feedback}
+              onChange={handleChange}
+              placeholder="Tell us your thoughts..."
+              required
+              className="
+                w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl
+                focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
+                text-sm text-neutral-900 placeholder-neutral-500
+                min-h-[100px] resize-none transition-all duration-200
+              "
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="
+              w-full flex items-center justify-center gap-2 px-6 py-3
+              bg-primary-600 hover:bg-primary-700 text-white font-medium
+              rounded-xl transition-all duration-300 hover:shadow-medium hover:scale-[1.02]
+              focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+              group
+            "
+          >
+            <span>Send Feedback</span>
+            <SendHorizontal className="size-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </form>
+
+        {/* Footer */}
+        <div className="p-6 sm:p-8 pt-0 text-center text-sm text-neutral-600">
+          <p>Thank you for helping us grow!</p>
+        </div>
+      </div>
     </div>
   );
 };

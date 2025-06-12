@@ -1,23 +1,22 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../VastuFrontend/src/components/Navbar";
 
-import Footer from "../components/Footer";
+import Footer from "../VastuFrontend/src/components/Footer";
 
-import Root from "./Root";
+import Root from "../VastuFrontend/src/pages/Root";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import VastuForm from "../components/VastuForm";
-import ContactPage from "../components/Contact";
-import Profile from "./Profile";
+import VastuForm from "../VastuFrontend/src/components/VastuForm";
+import ContactPage from "../VastuFrontend/src/components/Contact";
+import Profile from "../VastuFrontend/src/pages/Profile";
 import FloorForm from "@/pages/FloorForm";
-import FloorPlans from "@/components/FloorPlans";
-import ImageUploader from "@/components/ImageUploader";
+import FloorPlans from "../VastuFrontend/src/components/FloorPlans";
+import ImageUploader from "../VastuFrontend/src/components/ImageUploader";
 import FloorPlanAnnotator from "@/pages/FloorPlanAnnotator";
-
-import EditableReport from "@/pages/EditableReport";
-import ViewReport from "@/pages/ViewReport";
-import NotFound from "./NotFound";
-import CompassOverlay from "./CompassOverlay";
+import EditableReport from "../VastuFrontend/src/pages/EditableReport";
+import ViewReport from "../VastuFrontend/src/pages/ViewReport";
+import NotFound from "../VastuFrontend/src/pages/NotFound";
+import CompassOverlay from "../VastuFrontend/src/pages/CompassOverlay";
 
 function App() {
   return (
@@ -36,7 +35,7 @@ function App() {
         <Route path="/annotate" element={<FloorPlanAnnotator />} />
         <Route path="/floorForm/:projectName" element={<FloorForm />} />
         <Route path="/edit-report/:planID" element={<EditableReport />} />
-        <Route path="/viewreport/:planID" element={<ViewReport />} />
+        <Route path="/viewreport/:projectId" element={<ViewReport />} />
         <Route path="/compassOverlay" element={<CompassOverlay />} />
       </Routes>
       <Footer />

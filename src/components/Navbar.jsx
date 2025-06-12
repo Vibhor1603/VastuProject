@@ -38,6 +38,20 @@ export default function Navbar() {
     }
   };
 
+  // Set up event listeners for switching between modals
+  useEffect(() => {
+    const handleOpenLoginModal = () => setOpenLogin(true);
+    const handleOpenSignupModal = () => setOpenSignUp(true);
+
+    document.addEventListener("openLoginModal", handleOpenLoginModal);
+    document.addEventListener("openSignupModal", handleOpenSignupModal);
+
+    return () => {
+      document.removeEventListener("openLoginModal", handleOpenLoginModal);
+      document.removeEventListener("openSignupModal", handleOpenSignupModal);
+    };
+  }, []);
+
   useEffect(() => {
     async function userAuth() {
       try {
@@ -65,7 +79,7 @@ export default function Navbar() {
   }, [navigate]);
 
   return (
-    <nav className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
+    <nav className="bg-gradient-to-b from-orange-50 to-orange-200 border-b border-amber-100">
       <div className="container mx-auto px-2">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -176,7 +190,7 @@ export default function Navbar() {
             {isLoggedIn && localStorage.getItem("ROLE") === "USER" && (
               <NavLink
                 to="/project"
-                className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium"
+                className="block text-gray-700 hover:text-orange-600 hover:bg-orange-50 transition-colors duration-200 font-medium px-4 py-2"
               >
                 Create a Project
               </NavLink>
@@ -241,6 +255,9 @@ export default function Navbar() {
         <Signup
           onClose={() => {
             setOpenSignUp(false);
+          }}
+          success={() => {
+            setIsLoggedIn(true);
           }}
         />
       )}
