@@ -4,19 +4,19 @@ import Navbar from "./src/components/Navbar";
 
 import Footer from "./src/components/Footer";
 
-import Root from "../VastuFrontend/src/pages/Root";
+import Root from "./src/pages/Root";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import VastuForm from "./src/components/VastuForm";
 import ContactPage from "./src/components/Contact";
-import Profile from "../VastuFrontend/src/pages/Profile";
-import FloorForm from "@/pages/FloorForm";
+import Profile from "./src/pages/Profile";
+import FloorForm from "./src/pages/FloorForm";
 import FloorPlans from "./src/components/FloorPlans";
 import ImageUploader from "./src/components/ImageUploader";
 import FloorPlanAnnotator from "@/pages/FloorPlanAnnotator";
-import EditableReport from "../VastuFrontend/src/pages/EditableReport";
-import ViewReport from "../VastuFrontend/src/pages/ViewReport";
-import NotFound from "../VastuFrontend/src/pages/NotFound";
-import CompassOverlay from "../VastuFrontend/src/pages/CompassOverlay";
+import EditableReport from "./src/pages/EditableReport";
+import ViewReport from "./src/pages/ViewReport";
+import NotFound from "./src/pages/NotFound";
+import CompassOverlay from "./src/pages/CompassOverlay";
 
 function App() {
   return (
