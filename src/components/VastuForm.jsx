@@ -46,7 +46,7 @@ const VastuForm = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${VITE_BACKEND_URL}/api/v1/project/newproject`,
+        `${BACKEND_URL}/api/v1/project/newproject`,
         {
           method: "POST",
           headers: {
