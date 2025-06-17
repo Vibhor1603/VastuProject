@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import checkAuthStatus from "@/hooks/userSession";
 import { useNavigate } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import toast from "react-hot-toast";
+
 import {
   Home,
   Building2,
@@ -45,20 +47,20 @@ const VastuForm = () => {
   async function submitForm() {
     setLoading(true);
     try {
-      const response = await fetch(
-        `${BACKEND_URL}/api/v1/project/newproject`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/api/v1/project/newproject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
       if (response.ok) {
+        toast.success("Project created successfully!");
+        navigate(`/floorForm/:${formData.name}`);
         setLoading(false);
         const data = await response.json();
+        console.log(data);
         localStorage.setItem("projectId", data.id);
         localStorage.setItem("floorcount", formData.floorcount);
       }
