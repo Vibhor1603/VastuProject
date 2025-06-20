@@ -17,6 +17,7 @@ import EditableReport from "./src/pages/EditableReport";
 import ViewReport from "./src/pages/ViewReport";
 import NotFound from "./src/pages/NotFound";
 import CompassOverlay from "./src/pages/CompassOverlay";
+import ResetPassword from "@/pages/ResetPassword";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/edit-report/:planID" element={<EditableReport />} />
         <Route path="/viewreport/:projectId" element={<ViewReport />} />
         <Route path="/compassOverlay" element={<CompassOverlay />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
       <Footer />
     </Router>
